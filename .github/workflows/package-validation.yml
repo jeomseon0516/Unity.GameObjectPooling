@@ -1,0 +1,79 @@
+name: Package Validation
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate package manifest
+        shell: bash
+        run: |
+          jq empty package.json
+          test "$(jq -r '.name' package.json)" = "com.jeomseon.unity.pooling"
+          jq -e '.version | test("^[0-9]+\\.[0-9]+\\.[0-9]+([+-][0-9A-Za-z.-]+)?$")' package.json
+          test -n "$(jq -r '.unity' package.json)"
+          test "$(jq -r '.dependencies | type' package.json)" = "object"
+
+      - name: Validate required package files
+        shell: bash
+        run: |
+          test -f Runtime/Jeomseon.Unity.Pooling.asmdef
+          test -f Tests/Editor/Jeomseon.Unity.Pooling.Tests.asmdef
+          test -f README.md
+          test -f README.en.md
+          test -f CHANGELOG.md
+          test -f LICENSE.md
+          test -f package.json.meta
+
+      - name: Validate Unity meta files
+        shell: bash
+        run: |
+          while IFS= read -r asset; do
+            if [ ! -f "${asset}.meta" ]; then
+              echo "::error file=${asset}::Missing Unity meta file: ${asset}.meta"
+              exit 1
+            fi
+          done < <(find Runtime Tests -mindepth 1 ! -name '*.meta' -print)
+
+      - name: Reject Core dependency
+        shell: bash
+        run: |
+          jq -e '.dependencies["com.jeomseon.unity.core"] == null' package.json
+
+          if grep -R --include='*.cs' -nE 'Jeomseon\.Extensions' Runtime; then
+            echo "::error::Jeomseon.Extensions must not be referenced by the Pooling package."
+            exit 1
+          fi
+
+      - name: Validate release tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          package_version="$(jq -r '.version' package.json)"
+          tag_version="${GITHUB_REF_NAME#v}"
+          test "$package_version" = "$tag_version"
+
+      - name: Reject generated Unity directories
+        shell: bash
+        run: |
+          test ! -d Library
+          test ! -d Temp
+          test ! -d Obj
+          test ! -d Logs
+          test ! -d UserSettings

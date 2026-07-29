@@ -1,0 +1,25 @@
+{
+  "name": "com.jeomseon.unity.pooling",
+  "version": "0.1.0",
+  "displayName": "Jeomseon Unity Pooling",
+  "description": "Reusable pools and disposable pooling scopes for Unity projects.",
+  "unity": "2022.3",
+  "dependencies": {},
+  "author": {
+    "name": "jeomseon0516",
+    "url": "https://github.com/jeomseon0516"
+  },
+  "keywords": [
+    "jeomseon",
+    "pooling",
+    "object-pool",
+    "utilities"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeomseon0516/Unity.Pooling.git"
+  },
+  "changelogUrl": "https://github.com/jeomseon0516/Unity.Pooling/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/jeomseon0516/Unity.Pooling/blob/main/LICENSE.md"
+}

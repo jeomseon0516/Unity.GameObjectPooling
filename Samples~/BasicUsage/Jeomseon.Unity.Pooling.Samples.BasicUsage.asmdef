@@ -1,5 +1,6 @@
 {
   "name": "Jeomseon.Unity.Pooling.Samples.BasicUsage",
+  "rootNamespace": "Jeomseon.Samples.Pooling",
   "references": [
     "Jeomseon.Unity.Pooling"
   ]

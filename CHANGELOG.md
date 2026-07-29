@@ -1,5 +1,9 @@
 # 변경 기록
 
+## [0.1.2] - 2026-07-29
+
+- asmdef의 `rootNamespace`와 Pool·ObjectPool·Scope 파일 위치를 namespace에 맞게 정리했습니다.
+
 ## [0.1.1] - 2026-07-29
 
 - `ListPoolScope<T>`의 대여·반환 흐름을 확인하는 `Basic Usage` 샘플을 추가했습니다.

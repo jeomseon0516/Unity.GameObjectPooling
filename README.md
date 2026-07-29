@@ -32,7 +32,7 @@ JeomseonScriptPack의 풀링 및 풀 스코프 기능을 독립된 Unity Package
 Unity Package Manager의 `Install package from git URL`에 다음 URL을 입력합니다.
 
 ```text
-https://github.com/jeomseon0516/Unity.Pooling.git#v0.1.0
+https://github.com/jeomseon0516/Unity.Pooling.git#v0.1.1
 ```
 
 ## 로컬 개발

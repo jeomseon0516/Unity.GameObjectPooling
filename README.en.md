@@ -32,7 +32,7 @@ Register the OpenUPM scoped registry once in your project's `Packages/manifest.j
 Use the following URL with Unity Package Manager's `Install package from git URL` option:
 
 ```text
-https://github.com/jeomseon0516/Unity.Pooling.git#v0.1.0
+https://github.com/jeomseon0516/Unity.Pooling.git#v0.1.1
 ```
 
 ## Features

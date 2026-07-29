@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Jeomseon.ObjectPool
 {
+    // TODO(performance): Cache reset metadata per component type or replace reflection
+    // with an explicit reset strategy. Return currently scans every field and property.
+    // A ScriptableObject pool definition should be able to select the reset strategy.
     internal static class PoolInitializer
     {
         internal static void Initialize(object obj)

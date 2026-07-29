@@ -7,6 +7,9 @@ using System.Threading;
 
 namespace Jeomseon.Pool
 {
+    // TODO(architecture): Review the blocking SemaphoreSlim design before using this
+    // pool on Unity's main thread. Prefer a non-blocking capacity/overflow policy and
+    // make ownership and disposal behavior explicit.
     public class StringBuilderPool : IDisposable
     {
         public static StringBuilderPool Shared { get; } = new();

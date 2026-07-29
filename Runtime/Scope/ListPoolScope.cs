@@ -7,6 +7,8 @@ using UnityEngine.Pool;
 
 namespace Jeomseon.Scope
 {
+    // TODO(lifecycle): Replace finalizer logging with an editor-safe leak diagnostic.
+    // UnityEngine.Debug must not be called from the finalizer thread.
     public sealed class ListPoolScope<T> : ICollectionScope<List<T>, T>
     {
         private readonly List<T> _pooledList = ListPool<T>.Get();

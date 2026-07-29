@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Documentation
+
+- ScriptableObject 기반 풀 설정, 전역 정적 상태, 초기화 리플렉션 및 수명 관리 개선 지점에 TODO 주석을 추가했습니다.
+
 ## [0.1.0] - 2026-07-29
 
 ### Added

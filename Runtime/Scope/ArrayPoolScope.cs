@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Jeomseon.Scope
 {
+    // TODO(lifecycle): Remove finalizer-based diagnostics. Finalizers run on a GC thread
+    // and must not call Unity APIs; use editor diagnostics or explicit ownership checks.
     public class ArrayPoolScope<T> : IDisposable
     {
         private readonly T[] _pooledArray;

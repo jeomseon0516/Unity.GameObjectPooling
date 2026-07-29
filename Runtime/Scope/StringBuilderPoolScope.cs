@@ -4,6 +4,8 @@ using Jeomseon.Pool;
 
 namespace Jeomseon.Scope
 {
+    // TODO(lifecycle): Remove the finalizer and require deterministic disposal.
+    // Returning pooled instances from a finalizer can race with pool disposal.
     public sealed class StringBuilderPoolScope : IDisposable
     {
         private readonly StringBuilderPool _selectPool;

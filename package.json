@@ -1,6 +1,6 @@
 {
   "name": "com.jeomseon.unity.pooling",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "displayName": "Jeomseon Unity Pooling",
   "description": "Reusable pools and disposable pooling scopes for Unity projects.",
   "unity": "2022.3",

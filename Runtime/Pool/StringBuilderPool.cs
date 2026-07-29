@@ -7,9 +7,9 @@ using System.Threading;
 
 namespace Jeomseon.Pool
 {
-    // TODO(architecture): Review the blocking SemaphoreSlim design before using this
-    // pool on Unity's main thread. Prefer a non-blocking capacity/overflow policy and
-    // make ownership and disposal behavior explicit.
+    // TODO(architecture): Unity 메인 스레드에서 사용하기 전에 대기 상태를 만드는
+    // SemaphoreSlim 구조를 재검토해야 합니다. 대기하지 않는 용량 초과 정책을 제공하고
+    // 풀의 소유권과 Dispose 동작을 명확하게 정의해야 합니다.
     public class StringBuilderPool : IDisposable
     {
         public static StringBuilderPool Shared { get; } = new();

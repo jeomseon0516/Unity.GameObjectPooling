@@ -15,10 +15,9 @@ namespace Jeomseon.ObjectPool
         void OnReturnToPool();
     }
 
-    // TODO(architecture): Replace the global static pool with a Unity-friendly pool
-    // service backed by ScriptableObject assets. The asset should own prefab,
-    // initial capacity, maximum capacity, overflow policy, and scene lifetime settings.
-    // Keep a code-only API as an optional low-level implementation.
+    // TODO(architecture): 전역 정적 풀을 ScriptableObject 에셋 기반의 유니티 친화적인
+    // 풀 서비스로 교체해야 합니다. 에셋에서 프리팹, 초기 용량, 최대 용량, 용량 초과 정책,
+    // 씬 수명 설정을 관리하고, 코드 전용 API는 선택 가능한 저수준 구현으로 유지합니다.
     public static class GenericObjectPool<T> where T : Component
     {
         private static readonly Stack<T> _pool = new();
@@ -96,9 +95,9 @@ namespace Jeomseon.ObjectPool
         }
     }
     
-    // TODO(architecture): Replace string keys with stable pool definitions or typed
-    // identifiers stored in ScriptableObject assets. This should prevent key collisions
-    // and make pool configuration discoverable and editable in the Inspector.
+    // TODO(architecture): 문자열 키를 ScriptableObject 에셋에 저장되는 안정적인 풀 정의
+    // 또는 타입 기반 식별자로 교체해야 합니다. 키 충돌을 방지하고 Inspector에서
+    // 풀 설정을 쉽게 찾고 편집할 수 있어야 합니다.
     public static class KeyedObjectPool
     {
         private static readonly Dictionary<string, Stack<GameObject>> _pool = new();
@@ -200,8 +199,8 @@ namespace Jeomseon.ObjectPool
         }
     }
     
-    // TODO(architecture): Consolidate the generic, keyed, and generic-keyed variants
-    // behind one configurable pool service instead of maintaining three global stores.
+    // TODO(architecture): Generic, Keyed, GenericKeyed로 나뉜 세 개의 전역 저장소를
+    // 각각 유지하지 않고 하나의 설정 가능한 풀 서비스로 통합해야 합니다.
     public static class GenericKeyedObjectPool<T> where T : Component
     {
         private static readonly Dictionary<string, Stack<T>> _pool = new();

@@ -5,8 +5,8 @@ using UnityEngine.Pool;
 
 namespace Jeomseon.Scope
 {
-    // TODO(lifecycle): Replace finalizer logging with an editor-safe leak diagnostic.
-    // UnityEngine.Debug must not be called from the finalizer thread.
+    // TODO(lifecycle): Finalizer 로그를 에디터에서 안전하게 동작하는 누수 진단으로
+    // 교체해야 합니다. Finalizer 스레드에서 UnityEngine.Debug를 호출하면 안 됩니다.
     public sealed class DictionaryPoolScope<TKey, TValue> : IDisposable
     {
         private readonly Dictionary<TKey, TValue> _pooledDictionary = DictionaryPool<TKey, TValue>.Get();

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Jeomseon.ObjectPool
 {
-    // TODO(performance): Cache reset metadata per component type or replace reflection
-    // with an explicit reset strategy. Return currently scans every field and property.
-    // A ScriptableObject pool definition should be able to select the reset strategy.
+    // TODO(performance): 컴포넌트 타입별 초기화 메타데이터를 캐싱하거나 리플렉션을
+    // 명시적인 초기화 전략으로 교체해야 합니다. 현재는 반환할 때마다 모든 필드와
+    // 프로퍼티를 탐색합니다. ScriptableObject 풀 정의에서 초기화 전략을 선택할 수 있어야 합니다.
     internal static class PoolInitializer
     {
         internal static void Initialize(object obj)

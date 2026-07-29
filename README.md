@@ -58,10 +58,6 @@ https://github.com/jeomseon0516/Unity.Pooling.git#v0.1.0
 - 풀 반환 시 필드와 프로퍼티를 초기화하는 `PoolInitAttribute`
 - 배열, 리스트, 딕셔너리 및 `StringBuilder`용 `IDisposable` 스코프
 
-## 의존성
-
-다른 Jeomseon 패키지에 의존하지 않습니다. 기존 Core 확장 메서드 호출은 표준 C# 반복문으로 대체했습니다.
-
 ## 테스트
 
 패키지를 `testables`에 등록한 후 Unity Test Runner의 EditMode에서 실행합니다.

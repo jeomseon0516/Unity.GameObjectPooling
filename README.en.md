@@ -43,10 +43,6 @@ https://github.com/jeomseon0516/Unity.Pooling.git#v0.1.0
 - `PoolInitAttribute` for resetting fields and properties on return
 - Disposable scopes for arrays, lists, dictionaries, and `StringBuilder`
 
-## Dependencies
-
-This package has no dependency on other Jeomseon packages.
-
 ## License
 
 [MIT License](./LICENSE.md)

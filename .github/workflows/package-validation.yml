@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           jq empty package.json
-          test "$(jq -r '.name' package.json)" = "com.jeomseon.unity.pooling"
+          test "$(jq -r '.name' package.json)" = "com.jeomseon.unity.game-object-pooling"
           jq -e '.version | test("^[0-9]+\\.[0-9]+\\.[0-9]+([+-][0-9A-Za-z.-]+)?$")' package.json
           test -n "$(jq -r '.unity' package.json)"
           test "$(jq -r '.dependencies | type' package.json)" = "object"
@@ -33,8 +33,8 @@ jobs:
       - name: Validate required package files
         shell: bash
         run: |
-          test -f Runtime/Jeomseon.Unity.Pooling.asmdef
-          test -f Tests/Editor/Jeomseon.Unity.Pooling.Tests.asmdef
+          test -f Runtime/Jeomseon.Unity.GameObjectPooling.asmdef
+          test -f Tests/Editor/Jeomseon.Unity.GameObjectPooling.Tests.asmdef
           test -f README.md
           test -f README.en.md
           test -f CHANGELOG.md
@@ -57,7 +57,7 @@ jobs:
           jq -e '.dependencies["com.jeomseon.unity.core"] == null' package.json
 
           if grep -R --include='*.cs' -nE 'Jeomseon\.Extensions' Runtime; then
-            echo "::error::Jeomseon.Extensions must not be referenced by the Pooling package."
+            echo "::error::Jeomseon.Extensions must not be referenced by the GameObjectPooling package."
             exit 1
           fi
 

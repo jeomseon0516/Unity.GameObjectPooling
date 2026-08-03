@@ -1,0 +1,18 @@
+{
+  "name": "Jeomseon.Unity.GameObjectPooling.Editor",
+  "rootNamespace": "Jeomseon",
+  "references": [
+    "Jeomseon.Unity.GameObjectPooling"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

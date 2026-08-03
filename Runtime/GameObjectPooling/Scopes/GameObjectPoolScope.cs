@@ -206,8 +206,9 @@ namespace Jeomseon.GameObjectPooling.Scopes
         /// </summary>
         public GameObjectPoolHandle Register(GameObjectPoolDefinition definition)
         {
-            if (definition == null) throw new ArgumentNullException(nameof(definition));
-            return Register(definition.CreateRegistration());
+            return definition == null
+                ? throw new ArgumentNullException(nameof(definition))
+                : Register(definition.CreateRegistration());
         }
 
         /// <summary>

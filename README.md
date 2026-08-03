@@ -22,7 +22,7 @@ Unity GameObject와 Component를 위한 설정 가능하고 교체 가능한 풀
     }
   ],
   "dependencies": {
-    "com.jeomseon.unity.game-object-pooling": "0.1.2"
+    "com.jeomseon.unity.game-object-pooling": "0.2.0"
   }
 }
 ```
@@ -32,7 +32,7 @@ Unity GameObject와 Component를 위한 설정 가능하고 교체 가능한 풀
 Unity Package Manager의 `Install package from git URL`에 다음 URL을 입력합니다.
 
 ```text
-https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.1.2
+https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.2.0
 ```
 
 ## 로컬 개발

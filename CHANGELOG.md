@@ -1,16 +1,8 @@
 # 변경 기록
 
-## [0.1.2] - 2026-07-29
-
-- asmdef의 `rootNamespace`와 Pool·ObjectPool·Scope 파일 위치를 namespace에 맞게 정리했습니다.
-
-## [0.1.1] - 2026-07-29
-
-- `ListPoolScope<T>`의 대여·반환 흐름을 확인하는 `Basic Usage` 샘플을 추가했습니다.
-
-이 패키지의 주요 변경 사항을 기록합니다.
-
 ## [Unreleased]
+
+## [0.2.0] - 2026-08-03
 
 ### Added
 
@@ -30,7 +22,6 @@
 - 패키지 정체성을 범용 Pooling에서 GameObject와 Component 전용 `GameObjectPooling`으로 전환했습니다.
 - `IGameObjectPool`이 대여·반환 계약을 직접 선언하도록 하고 사용처가 없던 `IPool<T>`를 제거했습니다.
 - GameObject Pooling과 무관한 `StringBuilderPool` 및 테스트를 `Jeomseon.Unity.Core`로 이동했습니다.
-
 - ScriptableObject Definition을 불변 런타임 Configuration으로 변환하는 경계를 추가하고 Factory와 Pool의 Definition 의존성을 제거했습니다.
 - 수명 설정을 `IPoolLifetimeConfiguration`으로 분리하고 Definition 없는 런타임 풀에도 Scope/Scene/Application 수명을 적용할 수 있게 했습니다.
 - `GameObjectPoolService`에서 Definition 없이 Configuration으로 풀을 생성하고 개별 해제할 수 있게 했습니다.
@@ -55,6 +46,16 @@
 - 중복 저장소를 소유하던 `GenericObjectPool`, `KeyedObjectPool`, `GenericKeyedObjectPool`을 제거했습니다.
 - Definition을 런타임 저장소 키로 사용하던 Service API와 `IGameObjectPoolSource` 계층을 제거했습니다.
 - 구 `ObjectPool` 및 `Pool` 디렉터리를 제거하고 런타임 코드를 `Pooling` 책임 영역으로 통합했습니다.
+
+## [0.1.2] - 2026-07-29
+
+- asmdef의 `rootNamespace`와 Pool·ObjectPool·Scope 파일 위치를 namespace에 맞게 정리했습니다.
+
+## [0.1.1] - 2026-07-29
+
+- `ListPoolScope<T>`의 대여·반환 흐름을 확인하는 `Basic Usage` 샘플을 추가했습니다.
+
+이 패키지의 주요 변경 사항을 기록합니다.
 
 ## [0.1.0] - 2026-07-29
 

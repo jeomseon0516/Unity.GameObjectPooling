@@ -1,0 +1,7 @@
+{
+  "name": "Jeomseon.Unity.GameObjectPooling.Samples.BasicUsage",
+  "rootNamespace": "Jeomseon.Samples.GameObjectPooling",
+  "references": [
+    "Jeomseon.Unity.GameObjectPooling"
+  ]
+}

@@ -23,3 +23,7 @@
 6. **완료 — P2-03 — 사용자 수명 처리기 확장**
    - 수명 정책 데이터를 `IPoolLifetimeConfiguration`, 실행 책임을 `IPoolLifetimeHandler`로 분리했습니다.
    - Scope가 사용자 Handler의 소유권과 Dispose를 관리하며 기본 Scope/Scene/Application Handler를 제공합니다.
+7. **완료 — P2-04 — Owner 수명 정책**
+   - 런타임 GameObject 또는 Component를 소유자로 지정하고 실제 파괴 시 풀을 해제합니다.
+   - 비활성화와 파괴를 구분하며 소유자 하나로 여러 풀을 관리할 수 있습니다.
+   - Scene 객체를 참조하는 Owner Configuration은 ScriptableObject Definition과 분리했습니다.

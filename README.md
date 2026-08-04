@@ -68,6 +68,17 @@ https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.2.0
 
 Definition은 풀 생성 Configuration과 수명 Configuration으로 공유 Registration을 만듭니다. Scope는 `PoolLifetimeConfiguration`의 `Scope`, `Scene`, `Application` 정책을 처리하며, `Application` 수명은 `Dont Destroy On Load`가 활성화된 루트 Scope에서만 사용할 수 있습니다.
 
+Scene 객체가 풀을 소유해야 할 때는 런타임 전용 `OwnerPoolLifetimeConfiguration`을
+사용합니다. GameObject 또는 Component를 소유자로 지정할 수 있고, 비활성화가 아니라 실제로
+파괴된 뒤 풀을 해제합니다. 같은 소유자를 여러 풀에 지정할 수 있으며 Scene 객체 참조는
+ScriptableObject Definition에 저장하지 않습니다.
+
+```csharp
+GameObjectPoolHandle ownedHandle = scope.Register(
+    poolConfiguration,
+    new OwnerPoolLifetimeConfiguration(this));
+```
+
 ScriptableObject 없이 코드에서 Registration을 만들 수도 있습니다. 런타임 등록은 독립 Handle을 반환하며 Definition 등록은 같은 Scope에서 공유 Handle을 반환합니다.
 
 ```csharp
@@ -138,7 +149,7 @@ GameObject Pooling 핵심 패키지는 특정 로더 타입을 직접 참조하�
 프로젝트별 수명주기는 `IPoolLifetimeConfiguration`에 정책 데이터를 두고
 `IPoolLifetimeHandler`에 실행 로직을 구현한 뒤 Scope에 등록합니다. Scope는 Handler의
 소유권을 넘겨받아 종료 시 Dispose하며, 나중에 등록한 호환 Handler를 우선 선택합니다.
-이미 생성된 Handle은 최초 선택된 Handler를 계속 사용합니다. `Shutdown` 후 재초기화할
+이미 생성된 공유 Handle은 최초 선택된 Handler를 계속 사용합니다. `Shutdown` 후 재초기화할
 때는 사용자 Handler를 다시 등록해야 하며 `Validate`는 부작용 없이 구현해야 합니다.
 
 ```csharp

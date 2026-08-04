@@ -628,6 +628,7 @@ namespace Jeomseon.GameObjectPooling.Scopes
             _lifetimeHandlers.Add(new BuiltInPoolLifetimeHandler(
                 this,
                 _dontDestroyOnLoad));
+            _lifetimeHandlers.Add(new OwnerPoolLifetimeHandler(this));
         }
 
         private IPoolLifetimeHandler ResolveLifetimeHandler(

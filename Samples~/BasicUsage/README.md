@@ -113,6 +113,22 @@ Handler는 Scope에 등록되는 순간 소유권을 이전합니다. 이미 생
 Handler를 유지하며, Scope를 `Shutdown`한 뒤 다시 초기화하면 사용자 Handler도 다시 등록해야
 합니다. `Validate`는 부작용 없이 풀 생성 가능 여부만 검사하도록 구현합니다.
 
+## Owner Lifetime — Runtime ownership
+
+`OwnerPoolLifetimeConfiguration`은 GameObject 또는 Component의 실제 파괴 시점까지 풀을
+유지합니다. 소유 객체를 비활성화하는 것만으로는 풀을 해제하지 않습니다. Scene 객체 참조를
+Definition 에셋에 저장하지 않고 런타임 Composition Root에서 결합합니다.
+
+```csharp
+var configuration = new UnityGameObjectPoolConfiguration(prefab);
+GameObjectPoolHandle handle = scope.Register(
+    configuration,
+    new OwnerPoolLifetimeConfiguration(this));
+```
+
+`OwnerLifetimePoolingSample`은 Component 자신을 소유자로 등록하는 최소 예제입니다. 여러 풀에
+같은 소유자를 전달할 수 있으며, 소유자가 파괴되면 해당 풀들이 함께 해제됩니다.
+
 ## 네이밍과 파일 역할
 
 - `GameObjectPoolingSample`: 구성 출처를 모르는 간결한 Scope 호출
@@ -124,4 +140,5 @@ Handler를 유지하며, Scope를 `Shutdown`한 뒤 다시 초기화하면 사�
 - `ApplicationLifetimePoolingSample`: Application 수명 Play Mode 검증
 - `RoundPoolLifetimeHandler`: 프로젝트별 Round 수명 실행 예시
 - `RoundLifetimePoolingSample`: 사용자 Handler Composition Root
+- `OwnerLifetimePoolingSample`: GameObject/Component Owner 수명 Composition Root
 - `PooledSampleActor`: Provider가 초기화하는 샘플 Component

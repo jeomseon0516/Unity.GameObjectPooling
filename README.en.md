@@ -53,6 +53,17 @@ Regular call sites depend on a `GameObjectPoolHandle` returned by `GameObjectPoo
 
 Each definition produces a shared registration from separate pool-construction and lifetime configurations. The scope processes the built-in `Scope`, `Scene`, and `Application` policies. Application lifetime requires a root scope with `Dont Destroy On Load` enabled.
 
+Use the runtime-only `OwnerPoolLifetimeConfiguration` when a scene object owns a pool. A
+GameObject or Component can be the owner, and the pool is released only after actual
+destruction, not when the owner is disabled. The same owner can manage multiple pools. Scene
+object references are intentionally not stored in ScriptableObject Definitions.
+
+```csharp
+GameObjectPoolHandle ownedHandle = scope.Register(
+    poolConfiguration,
+    new OwnerPoolLifetimeConfiguration(this));
+```
+
 A registration can also be created in code without a ScriptableObject. Runtime registrations return independent handles, while a Definition resolves a shared handle within one scope.
 
 ```csharp
@@ -124,7 +135,7 @@ specific loader type.
 For a project-specific lifetime, store policy data in `IPoolLifetimeConfiguration`, implement
 its execution in `IPoolLifetimeHandler`, and register the handler with a Scope. The Scope takes
 ownership and disposes the handler on shutdown; the latest compatible handler takes precedence.
-An existing Handle keeps its initially selected handler. Custom handlers must be registered
+An existing shared Handle keeps its initially selected handler. Custom handlers must be registered
 again after shutdown and reinitialization, and `Validate` must remain free of side effects.
 
 ```csharp

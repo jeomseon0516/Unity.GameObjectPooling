@@ -133,6 +133,88 @@ namespace Jeomseon.Tests
         }
 
         [UnityTest]
+        public IEnumerator OwnerLifetime_ReleasesPoolOnlyAfterOwnerIsDestroyed()
+        {
+            var prefab = new GameObject("Owner lifetime prefab");
+            prefab.SetActive(false);
+            var scopeObject = new GameObject("Owner lifetime scope");
+            GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
+            var owner = new GameObject("Pool owner");
+            GameObjectPoolHandle handle = scope.Register(
+                new UnityGameObjectPoolConfiguration(prefab),
+                new OwnerPoolLifetimeConfiguration(owner));
+
+            owner.SetActive(false);
+            yield return null;
+            Assert.That(handle.IsValid, Is.True, "Disabling an owner must not release its pool.");
+
+            Object.Destroy(owner);
+            yield return null;
+            yield return null;
+            Assert.That(handle.IsValid, Is.False);
+            Assert.Throws<System.ObjectDisposedException>(() => handle.Spawn());
+
+            Object.Destroy(scopeObject);
+            Object.Destroy(prefab);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator OwnerLifetime_ComponentDestructionDoesNotRequireGameObjectDestruction()
+        {
+            var prefab = new GameObject("Component owner prefab");
+            prefab.SetActive(false);
+            var scopeObject = new GameObject("Component owner scope");
+            GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
+            var ownerObject = new GameObject("Component owner GameObject");
+            BoxCollider owner = ownerObject.AddComponent<BoxCollider>();
+            GameObjectPoolHandle handle = scope.Register(
+                new UnityGameObjectPoolConfiguration(prefab),
+                new OwnerPoolLifetimeConfiguration(owner));
+
+            Object.Destroy(owner);
+            yield return null;
+            yield return null;
+
+            Assert.That(ownerObject, Is.Not.Null);
+            Assert.That(handle.IsValid, Is.False);
+
+            Object.Destroy(ownerObject);
+            Object.Destroy(scopeObject);
+            Object.Destroy(prefab);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator OwnerLifetime_ReleasesEveryPoolOwnedByOneObject()
+        {
+            var firstPrefab = new GameObject("First owner prefab");
+            var secondPrefab = new GameObject("Second owner prefab");
+            firstPrefab.SetActive(false);
+            secondPrefab.SetActive(false);
+            var scopeObject = new GameObject("Shared owner scope");
+            GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
+            var owner = new GameObject("Shared pool owner");
+            var lifetime = new OwnerPoolLifetimeConfiguration(owner);
+            GameObjectPoolHandle first = scope.Register(
+                new UnityGameObjectPoolConfiguration(firstPrefab), lifetime);
+            GameObjectPoolHandle second = scope.Register(
+                new UnityGameObjectPoolConfiguration(secondPrefab), lifetime);
+
+            Object.Destroy(owner);
+            yield return null;
+            yield return null;
+
+            Assert.That(first.IsValid, Is.False);
+            Assert.That(second.IsValid, Is.False);
+
+            Object.Destroy(scopeObject);
+            Object.Destroy(firstPrefab);
+            Object.Destroy(secondPrefab);
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator ServiceAsync_PrefersAsyncFactoryAndFallsBackToSyncFactory()
         {
             async Awaitable TestImplementation()

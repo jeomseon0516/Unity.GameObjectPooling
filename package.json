@@ -1,10 +1,10 @@
 {
   "name": "com.jeomseon.unity.game-object-pooling",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "displayName": "Jeomseon Unity GameObject Pooling",
   "description": "Configurable GameObject and Component pooling with replaceable factories, scopes, and lifetime policies.",
-  "unity": "6000.3",
-  "unityRelease": "15f1",
+  "unity": "6000.5",
+  "unityRelease": "7f1",
   "dependencies": {},
   "author": {
     "name": "jeomseon0516",

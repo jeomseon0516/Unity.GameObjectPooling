@@ -4,7 +4,7 @@ Provides configurable and replaceable pooling for Unity GameObjects and Componen
 
 ## Requirements
 
-- Unity 6000.3.15f1 or newer
+- Unity 6000.5.7f1 or newer
 
 ## Installation with OpenUPM
 

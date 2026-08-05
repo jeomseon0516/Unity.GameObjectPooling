@@ -4,7 +4,7 @@ Unity GameObject와 Component를 위한 설정 가능하고 교체 가능한 풀
 
 ## 요구 사항
 
-- Unity 6000.3.15f1 이상
+- Unity 6000.5.7f1 이상
 
 ## OpenUPM으로 설치
 

@@ -366,7 +366,7 @@ namespace Jeomseon.GameObjectPooling.Scopes
             IGameObjectPool pool)
         {
             var lifetimeContext = new PoolLifetimeRegistrationContext(
-                SceneManager.GetActiveScene().handle,
+                SceneManager.GetActiveScene().handle.GetRawData(),
                 _releaseHandle);
             object identity = registration.SharedIdentity;
             var handle = new GameObjectPoolHandle(registration.Name, pool);
@@ -400,7 +400,7 @@ namespace Jeomseon.GameObjectPooling.Scopes
             IPoolLifetimeHandler handler = _handleLifetimeHandlers[handle];
             handler.Validate(configuration);
             var context = new PoolLifetimeRegistrationContext(
-                SceneManager.GetActiveScene().handle,
+                SceneManager.GetActiveScene().handle.GetRawData(),
                 _releaseHandle);
             handler.Register(handle, configuration, context);
         }

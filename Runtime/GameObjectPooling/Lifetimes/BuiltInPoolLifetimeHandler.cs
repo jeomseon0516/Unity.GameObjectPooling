@@ -15,7 +15,7 @@ namespace Jeomseon.GameObjectPooling.Lifetimes
     {
         private readonly GameObjectPoolScope _scope;
         private readonly bool _isPersistent;
-        private readonly Dictionary<GameObjectPoolHandle, HashSet<int>> _sceneOwners = new();
+        private readonly Dictionary<GameObjectPoolHandle, HashSet<ulong>> _sceneOwners = new();
         private PoolLifetimeRegistrationContext _context;
         private bool _hasContext;
         private bool _subscribed;
@@ -72,9 +72,9 @@ namespace Jeomseon.GameObjectPooling.Lifetimes
             var builtIn = (PoolLifetimeConfiguration)configuration;
             if (builtIn.Lifetime != PoolLifetime.Scene) return;
 
-            if (!_sceneOwners.TryGetValue(handle, out HashSet<int> owners))
+            if (!_sceneOwners.TryGetValue(handle, out HashSet<ulong> owners))
             {
-                owners = new HashSet<int>();
+                owners = new HashSet<ulong>();
                 _sceneOwners.Add(handle, owners);
             }
 
@@ -115,9 +115,9 @@ namespace Jeomseon.GameObjectPooling.Lifetimes
         {
             if (!_hasContext) return;
             var handlesToRelease = new List<GameObjectPoolHandle>();
-            foreach (KeyValuePair<GameObjectPoolHandle, HashSet<int>> pair in _sceneOwners)
+            foreach (KeyValuePair<GameObjectPoolHandle, HashSet<ulong>> pair in _sceneOwners)
             {
-                pair.Value.Remove(scene.handle);
+                pair.Value.Remove(scene.handle.GetRawData());
                 if (pair.Value.Count == 0) handlesToRelease.Add(pair.Key);
             }
 

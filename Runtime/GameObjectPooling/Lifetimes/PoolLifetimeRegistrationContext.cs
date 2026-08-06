@@ -17,10 +17,10 @@ namespace Jeomseon.GameObjectPooling.Lifetimes
         /// Gets the handle owner's Unity Scene handle.
         /// Handle 소유자의 Unity Scene Handle을 가져옵니다.
         /// </summary>
-        public int OwnerSceneHandle { get; }
+        public ulong OwnerSceneHandle { get; }
 
         internal PoolLifetimeRegistrationContext(
-            int ownerSceneHandle,
+            ulong ownerSceneHandle,
             Action<GameObjectPoolHandle> release)
         {
             OwnerSceneHandle = ownerSceneHandle;

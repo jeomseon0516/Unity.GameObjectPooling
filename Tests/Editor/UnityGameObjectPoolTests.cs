@@ -482,7 +482,7 @@ namespace Jeomseon.Tests
             scopeObject.transform.SetParent(parent.transform);
             GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
             var serializedScope = new SerializedObject(scope);
-            serializedScope.FindProperty("_dontDestroyOnLoad").boolValue = true;
+            serializedScope.FindProperty("dontDestroyOnLoad").boolValue = true;
             serializedScope.ApplyModifiedPropertiesWithoutUndo();
             var configuration = new UnityGameObjectPoolConfiguration(prefab);
 
@@ -528,8 +528,8 @@ namespace Jeomseon.Tests
             GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
 
             var serializedScope = new SerializedObject(scope);
-            serializedScope.FindProperty("_catalog").objectReferenceValue = catalog;
-            serializedScope.FindProperty("_defaultDefinition").objectReferenceValue = definition;
+            serializedScope.FindProperty("catalog").objectReferenceValue = catalog;
+            serializedScope.FindProperty("defaultDefinition").objectReferenceValue = definition;
             serializedScope.ApplyModifiedPropertiesWithoutUndo();
             scopeObject.SetActive(true);
 
@@ -616,10 +616,10 @@ namespace Jeomseon.Tests
             definition.name = "Test definition";
 
             var serializedDefinition = new SerializedObject(definition);
-            serializedDefinition.FindProperty("_prefab").objectReferenceValue = prefab;
-            serializedDefinition.FindProperty("_prewarmCount").intValue = prewarmCount;
-            serializedDefinition.FindProperty("_defaultCapacity").intValue = 2;
-            serializedDefinition.FindProperty("_maxInactiveCount").intValue = 4;
+            serializedDefinition.FindProperty("prefab").objectReferenceValue = prefab;
+            serializedDefinition.FindProperty("prewarmCount").intValue = prewarmCount;
+            serializedDefinition.FindProperty("defaultCapacity").intValue = 2;
+            serializedDefinition.FindProperty("maxInactiveCount").intValue = 4;
             serializedDefinition.ApplyModifiedPropertiesWithoutUndo();
             return definition;
         }
@@ -637,7 +637,7 @@ namespace Jeomseon.Tests
             GameObjectPoolCatalog catalog =
                 ScriptableObject.CreateInstance<GameObjectPoolCatalog>();
             var serializedCatalog = new SerializedObject(catalog);
-            SerializedProperty items = serializedCatalog.FindProperty("_definitions");
+            SerializedProperty items = serializedCatalog.FindProperty("definitions");
             items.arraySize = definitions.Length;
             for (int i = 0; i < definitions.Length; i++)
             {

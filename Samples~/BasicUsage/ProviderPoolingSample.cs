@@ -1,5 +1,6 @@
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -15,7 +16,7 @@ namespace Jeomseon.Samples.GameObjectPooling
     /// </summary>
     public sealed class ProviderPoolingSample : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
         private ISampleActorProvider _provider;
         private PooledSampleActor _actor;
 
@@ -45,9 +46,9 @@ namespace Jeomseon.Samples.GameObjectPooling
 
         private void EnsureProvider()
         {
-            if (_provider != null || _scope == null) return;
+            if (_provider != null || scope == null) return;
 
-            _provider = new SampleActorPoolProvider(_scope.DefaultHandle);
+            _provider = new SampleActorPoolProvider(scope.DefaultHandle);
         }
     }
 }

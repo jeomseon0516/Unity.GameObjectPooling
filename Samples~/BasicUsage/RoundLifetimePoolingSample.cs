@@ -2,6 +2,7 @@ using Jeomseon.GameObjectPooling.Configurations;
 using Jeomseon.GameObjectPooling.Handles;
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -12,24 +13,24 @@ namespace Jeomseon.Samples.GameObjectPooling
     [DefaultExecutionOrder(-1000)]
     public sealed class RoundLifetimePoolingSample : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
-        [SerializeField] private SampleRoundLifetimeController _roundController;
-        [SerializeField] private GameObject _prefab;
-        [SerializeField] private int _roundId = 1;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
+        [SerializeField, FormerlySerializedAs("_roundController")] private SampleRoundLifetimeController roundController;
+        [SerializeField, FormerlySerializedAs("_prefab")] private GameObject prefab;
+        [SerializeField, FormerlySerializedAs("_roundId")] private int roundId = 1;
 
         private GameObjectPoolHandle _handle;
         private GameObject _instance;
 
         private void Awake()
         {
-            if (_scope == null || _roundController == null || _prefab == null) return;
+            if (scope == null || roundController == null || prefab == null) return;
 
-            _scope.RegisterLifetimeHandler(
-                new RoundPoolLifetimeHandler(_roundController));
-            _handle = _scope.Register(
-                new UnityGameObjectPoolConfiguration(_prefab, "Round Lifetime Pool", 1),
-                new RoundLifetimeConfiguration(_roundId));
-            _scope.SetDefault(_handle);
+            scope.RegisterLifetimeHandler(
+                new RoundPoolLifetimeHandler(roundController));
+            _handle = scope.Register(
+                new UnityGameObjectPoolConfiguration(prefab, "Round Lifetime Pool", 1),
+                new RoundLifetimeConfiguration(roundId));
+            scope.SetDefault(_handle);
         }
 
         [ContextMenu("Spawn Round Object / Round 객체 생성")]
@@ -42,9 +43,9 @@ namespace Jeomseon.Samples.GameObjectPooling
         [ContextMenu("End Round And Release Pool / Round 종료 및 풀 해제")]
         private void EndRound()
         {
-            if (_roundController == null) return;
+            if (roundController == null) return;
 
-            _roundController.EndRound(_roundId);
+            roundController.EndRound(roundId);
             _instance = null;
             Debug.Log(
                 _handle != null && !_handle.IsValid

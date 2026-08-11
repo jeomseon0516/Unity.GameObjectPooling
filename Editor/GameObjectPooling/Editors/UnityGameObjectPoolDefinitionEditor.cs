@@ -11,9 +11,9 @@ namespace Jeomseon.GameObjectPooling.Editors
             serializedObject.Update();
             DrawDefaultInspector();
 
-            SerializedProperty prefab = serializedObject.FindProperty("_prefab");
-            SerializedProperty prewarm = serializedObject.FindProperty("_prewarmCount");
-            SerializedProperty maxInactive = serializedObject.FindProperty("_maxInactiveCount");
+            SerializedProperty prefab = serializedObject.FindProperty("prefab");
+            SerializedProperty prewarm = serializedObject.FindProperty("prewarmCount");
+            SerializedProperty maxInactive = serializedObject.FindProperty("maxInactiveCount");
             if (prefab.objectReferenceValue == null)
             {
                 EditorGUILayout.HelpBox(

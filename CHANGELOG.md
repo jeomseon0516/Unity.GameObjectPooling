@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-08-11
+
+- 워크스페이스 명명 규칙에 맞춰 `[SerializeField] private` 필드를 `_camelCase`에서 `camelCase`로
+  정리하고 기존 이름을 `[FormerlySerializedAs]`로 보존했습니다. `GameObjectPoolScopeEditor`,
+  `GameObjectPoolCatalogEditor`, `UnityGameObjectPoolDefinitionEditor`의 `FindProperty` 문자열과
+  테스트의 reflection 기반 `SetField`/`FindProperty` 문자열도 함께 갱신했습니다. 공개 C# API
+  변경은 없으며 기존 Scene·Prefab의 직렬화된 값은 그대로 유지됩니다.
+
 ## [0.2.0] - 2026-08-03
 
 ### Added

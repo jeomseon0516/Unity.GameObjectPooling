@@ -13,7 +13,7 @@ namespace Jeomseon.GameObjectPooling.Editors
             serializedObject.Update();
             DrawDefaultInspector();
 
-            SerializedProperty definitions = serializedObject.FindProperty("_definitions");
+            SerializedProperty definitions = serializedObject.FindProperty("definitions");
             var uniqueDefinitions = new HashSet<Object>();
             for (int i = 0; i < definitions.arraySize; i++)
             {

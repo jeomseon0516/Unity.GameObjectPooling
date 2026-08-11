@@ -3,6 +3,7 @@ using Jeomseon.GameObjectPooling.Handles;
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -16,7 +17,7 @@ namespace Jeomseon.Samples.GameObjectPooling
     /// </summary>
     public sealed class ApplicationLifetimePoolingSample : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
         private bool _isRunning;
 
         [ContextMenu("Run Application Lifetime Check / Application 수명 검사 실행")]
@@ -30,7 +31,7 @@ namespace Jeomseon.Samples.GameObjectPooling
                 return;
             }
 
-            if (_isRunning || _scope == null) return;
+            if (_isRunning || scope == null) return;
             StartCoroutine(VerifyAfterOwnerSceneUnload());
         }
 
@@ -38,7 +39,7 @@ namespace Jeomseon.Samples.GameObjectPooling
         {
             _isRunning = true;
             Scene ownerScene = SceneManager.GetActiveScene();
-            GameObjectPoolHandle handle = _scope.DefaultHandle;
+            GameObjectPoolHandle handle = scope.DefaultHandle;
 
             GameObject beforeUnload = handle.Spawn();
             handle.Despawn(beforeUnload);
@@ -48,7 +49,7 @@ namespace Jeomseon.Samples.GameObjectPooling
             SceneManager.SetActiveScene(verificationScene);
             yield return SceneManager.UnloadSceneAsync(ownerScene);
 
-            if (_scope == null || !handle.IsValid)
+            if (scope == null || !handle.IsValid)
             {
                 Debug.LogError(
                     "[FAIL] Application pool did not survive the owner scene unload. / " +

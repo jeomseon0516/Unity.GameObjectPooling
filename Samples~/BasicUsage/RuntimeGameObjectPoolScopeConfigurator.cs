@@ -2,6 +2,7 @@ using Jeomseon.GameObjectPooling.Configurations;
 using Jeomseon.GameObjectPooling.Handles;
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -18,22 +19,22 @@ namespace Jeomseon.Samples.GameObjectPooling
     [DefaultExecutionOrder(-1000)]
     public sealed class RuntimeGameObjectPoolScopeConfigurator : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
-        [SerializeField] private GameObject _prefab;
-        [SerializeField, Min(0)] private int _prewarmCount = 2;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
+        [SerializeField, FormerlySerializedAs("_prefab")] private GameObject prefab;
+        [SerializeField, Min(0), FormerlySerializedAs("_prewarmCount")] private int prewarmCount = 2;
 
         private void Awake()
         {
-            if (_scope == null || _prefab == null) return;
+            if (scope == null || prefab == null) return;
 
             var configuration = new UnityGameObjectPoolConfiguration(
-                _prefab,
+                prefab,
                 $"{gameObject.name} Pool",
-                _prewarmCount);
-            GameObjectPoolHandle handle = _scope.Register(
+                prewarmCount);
+            GameObjectPoolHandle handle = scope.Register(
                 configuration,
                 PoolLifetimeConfiguration.Scene);
-            _scope.SetDefault(handle);
+            scope.SetDefault(handle);
         }
     }
 }

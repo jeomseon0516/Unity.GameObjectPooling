@@ -4,6 +4,7 @@ using Jeomseon.GameObjectPooling.Handles;
 using Jeomseon.GameObjectPooling.Registrations;
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -15,15 +16,15 @@ namespace Jeomseon.Samples.GameObjectPooling
     /// </summary>
     public sealed class AsyncPoolingSample : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
-        [SerializeField] private GameObjectPoolDefinition _definition;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
+        [SerializeField, FormerlySerializedAs("_definition")] private GameObjectPoolDefinition definition;
 
         private GameObjectPoolHandle _handle;
 
         private async Awaitable Start()
         {
             CancellationToken cancellationToken = destroyCancellationToken;
-            _handle = await _scope.RegisterAsync(_definition, cancellationToken);
+            _handle = await scope.RegisterAsync(definition, cancellationToken);
 
             GameObject instance = _handle.Spawn();
             _handle.Despawn(instance);
@@ -36,8 +37,8 @@ namespace Jeomseon.Samples.GameObjectPooling
         [ContextMenu("Register With Callback")]
         private void RegisterWithCallback()
         {
-            _scope.RegisterAsync(
-                _definition,
+            scope.RegisterAsync(
+                definition,
                 OnRegistered,
                 destroyCancellationToken);
         }

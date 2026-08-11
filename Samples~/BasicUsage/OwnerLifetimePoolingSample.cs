@@ -2,6 +2,7 @@ using Jeomseon.GameObjectPooling.Configurations;
 using Jeomseon.GameObjectPooling.Handles;
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -11,18 +12,18 @@ namespace Jeomseon.Samples.GameObjectPooling
     /// </summary>
     public sealed class OwnerLifetimePoolingSample : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
-        [SerializeField] private GameObject _prefab;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
+        [SerializeField, FormerlySerializedAs("_prefab")] private GameObject prefab;
         private GameObjectPoolHandle _handle;
 
         private void Start()
         {
-            if (_scope == null || _prefab == null) return;
+            if (scope == null || prefab == null) return;
 
             var poolConfiguration = new UnityGameObjectPoolConfiguration(
-                _prefab,
+                prefab,
                 "Owner Lifetime Pool");
-            _handle = _scope.Register(
+            _handle = scope.Register(
                 poolConfiguration,
                 new OwnerPoolLifetimeConfiguration(this));
         }

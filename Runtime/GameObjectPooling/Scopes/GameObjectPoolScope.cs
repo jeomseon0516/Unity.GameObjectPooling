@@ -11,6 +11,7 @@ using Jeomseon.GameObjectPooling.Registrations;
 using Jeomseon.GameObjectPooling.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.GameObjectPooling.Scopes
 {
@@ -23,10 +24,10 @@ namespace Jeomseon.GameObjectPooling.Scopes
     [DisallowMultipleComponent]
     public sealed class GameObjectPoolScope : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolCatalog _catalog;
-        [SerializeField] private GameObjectPoolDefinition _defaultDefinition;
-        [SerializeField] private bool _initializeOnAwake = true;
-        [SerializeField] private bool _dontDestroyOnLoad;
+        [SerializeField, FormerlySerializedAs("_catalog")] private GameObjectPoolCatalog catalog;
+        [SerializeField, FormerlySerializedAs("_defaultDefinition")] private GameObjectPoolDefinition defaultDefinition;
+        [SerializeField, FormerlySerializedAs("_initializeOnAwake")] private bool initializeOnAwake = true;
+        [SerializeField, FormerlySerializedAs("_dontDestroyOnLoad")] private bool dontDestroyOnLoad;
 
         private readonly Dictionary<object, GameObjectPoolHandle> _sharedHandles = new();
         private readonly HashSet<GameObjectPoolHandle> _handles = new();
@@ -67,14 +68,14 @@ namespace Jeomseon.GameObjectPooling.Scopes
             {
                 Initialize();
                 if (_defaultHandle != null && _defaultHandle.IsValid) return _defaultHandle;
-                if (_defaultDefinition == null)
+                if (defaultDefinition == null)
                 {
                     throw new InvalidOperationException(
                         $"{nameof(GameObjectPoolScope)} requires a default Definition or " +
                         "an explicitly assigned default registration.");
                 }
 
-                _defaultHandle = Register(_defaultDefinition);
+                _defaultHandle = Register(defaultDefinition);
                 return _defaultHandle;
             }
         }
@@ -90,20 +91,20 @@ namespace Jeomseon.GameObjectPooling.Scopes
         {
             await InitializeAsync(cancellationToken);
             if (_defaultHandle != null && _defaultHandle.IsValid) return _defaultHandle;
-            if (_defaultDefinition == null)
+            if (defaultDefinition == null)
             {
                 throw new InvalidOperationException(
                     $"{nameof(GameObjectPoolScope)} requires a default Definition or " +
                     "an explicitly assigned default registration.");
             }
 
-            _defaultHandle = await RegisterAsync(_defaultDefinition, cancellationToken);
+            _defaultHandle = await RegisterAsync(defaultDefinition, cancellationToken);
             return _defaultHandle;
         }
 
         private void Awake()
         {
-            if (_dontDestroyOnLoad && Application.isPlaying)
+            if (dontDestroyOnLoad && Application.isPlaying)
             {
                 if (transform.parent != null)
                 {
@@ -115,7 +116,7 @@ namespace Jeomseon.GameObjectPooling.Scopes
                 DontDestroyOnLoad(gameObject);
             }
 
-            if (_initializeOnAwake) Initialize();
+            if (initializeOnAwake) Initialize();
         }
 
         /// <summary>
@@ -128,7 +129,7 @@ namespace Jeomseon.GameObjectPooling.Scopes
             InitializeCore();
             try
             {
-                LoadCatalogEntries(_catalog);
+                LoadCatalogEntries(catalog);
             }
             catch
             {
@@ -150,7 +151,7 @@ namespace Jeomseon.GameObjectPooling.Scopes
             InitializeCore();
             try
             {
-                await LoadCatalogEntriesAsync(_catalog, cancellationToken);
+                await LoadCatalogEntriesAsync(catalog, cancellationToken);
             }
             catch
             {
@@ -627,7 +628,7 @@ namespace Jeomseon.GameObjectPooling.Scopes
             if (_lifetimeHandlers.Count != 0) return;
             _lifetimeHandlers.Add(new BuiltInPoolLifetimeHandler(
                 this,
-                _dontDestroyOnLoad));
+                dontDestroyOnLoad));
             _lifetimeHandlers.Add(new OwnerPoolLifetimeHandler(this));
         }
 

@@ -2,6 +2,7 @@ using Jeomseon.GameObjectPooling.Contracts;
 using Jeomseon.GameObjectPooling.Handles;
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -13,7 +14,7 @@ namespace Jeomseon.Samples.GameObjectPooling
     /// </summary>
     public sealed class RuntimeConfiguredPoolingSample : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
         private GameObjectPoolHandle _handle;
         private GameObject _instance;
 
@@ -22,9 +23,9 @@ namespace Jeomseon.Samples.GameObjectPooling
         {
             if (_instance != null) return;
 
-            if (_scope == null) return;
+            if (scope == null) return;
 
-            _handle ??= _scope.DefaultHandle;
+            _handle ??= scope.DefaultHandle;
             _instance = _handle.Spawn(PoolSpawnOptions.At(
                 transform.position,
                 transform.rotation,

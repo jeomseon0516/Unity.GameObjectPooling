@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.GameObjectPooling.Definitions
 {
@@ -13,13 +14,13 @@ namespace Jeomseon.GameObjectPooling.Definitions
         menuName = "Tool/GameObject Pooling/GameObject Pool Catalog")]
     public sealed class GameObjectPoolCatalog : ScriptableObject
     {
-        [SerializeField] private GameObjectPoolDefinition[] _definitions =
+        [SerializeField, FormerlySerializedAs("_definitions")] private GameObjectPoolDefinition[] definitions =
             Array.Empty<GameObjectPoolDefinition>();
 
         /// <summary>
         /// Gets the definitions registered in this catalog.
         /// 이 Catalog에 등록된 Definition을 가져옵니다.
         /// </summary>
-        public IReadOnlyList<GameObjectPoolDefinition> Definitions => _definitions;
+        public IReadOnlyList<GameObjectPoolDefinition> Definitions => definitions;
     }
 }

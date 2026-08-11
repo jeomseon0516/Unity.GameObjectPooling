@@ -2,6 +2,7 @@ using Jeomseon.GameObjectPooling.Configurations;
 using Jeomseon.GameObjectPooling.Handles;
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -16,21 +17,21 @@ namespace Jeomseon.Samples.GameObjectPooling
     [DefaultExecutionOrder(-1100)]
     public sealed class LowLevelCustomPoolSample : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
-        [SerializeField] private GameObject _prefab;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
+        [SerializeField, FormerlySerializedAs("_prefab")] private GameObject prefab;
 
         private void Awake()
         {
-            if (_scope == null || _prefab == null) return;
+            if (scope == null || prefab == null) return;
 
-            _scope.RegisterFactory(new CountingGameObjectPoolFactory());
+            scope.RegisterFactory(new CountingGameObjectPoolFactory());
             var unityConfiguration = new UnityGameObjectPoolConfiguration(
-                _prefab,
+                prefab,
                 "Low-Level Counting Pool");
-            GameObjectPoolHandle handle = _scope.Register(
+            GameObjectPoolHandle handle = scope.Register(
                 new CountingPoolConfiguration(unityConfiguration),
                 PoolLifetimeConfiguration.Scene);
-            _scope.SetDefault(handle);
+            scope.SetDefault(handle);
         }
     }
 }

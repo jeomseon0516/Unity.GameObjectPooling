@@ -1,6 +1,7 @@
 using Jeomseon.GameObjectPooling.Contracts;
 using Jeomseon.GameObjectPooling.Scopes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {
@@ -10,15 +11,15 @@ namespace Jeomseon.Samples.GameObjectPooling
     /// </summary>
     public sealed class GameObjectPoolingSample : MonoBehaviour
     {
-        [SerializeField] private GameObjectPoolScope _scope;
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
         private GameObject _instance;
 
         [ContextMenu("Get Pooled Object / 풀 객체 가져오기")]
         private void GetPooledObject()
         {
-            if (_instance != null || _scope == null) return;
+            if (_instance != null || scope == null) return;
 
-            _instance = _scope.Spawn(PoolSpawnOptions.At(
+            _instance = scope.Spawn(PoolSpawnOptions.At(
                 transform.position,
                 transform.rotation,
                 transform));
@@ -27,9 +28,9 @@ namespace Jeomseon.Samples.GameObjectPooling
         [ContextMenu("Release Pooled Object / 풀 객체 반환하기")]
         private void ReleasePooledObject()
         {
-            if (_instance == null || _scope == null) return;
+            if (_instance == null || scope == null) return;
 
-            _scope.Despawn(_instance);
+            scope.Despawn(_instance);
             _instance = null;
         }
     }

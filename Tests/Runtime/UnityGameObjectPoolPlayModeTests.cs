@@ -110,7 +110,7 @@ namespace Jeomseon.Tests
             var scopeObject = new GameObject("Persistent pool scope");
             scopeObject.SetActive(false);
             GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
-            SetField(scope, "_dontDestroyOnLoad", true);
+            SetField(scope, "dontDestroyOnLoad", true);
             scopeObject.SetActive(true);
             var poolConfiguration = new UnityGameObjectPoolConfiguration(prefab);
             GameObjectPoolHandle handle = scope.Register(
@@ -324,10 +324,10 @@ namespace Jeomseon.Tests
         {
             UnityGameObjectPoolDefinition definition =
                 ScriptableObject.CreateInstance<UnityGameObjectPoolDefinition>();
-            SetField(definition, "_prefab", prefab);
-            SetField(definition, "_destroyedInstancePolicy", policy);
-            SetField(definition, "_defaultCapacity", 1);
-            SetField(definition, "_maxInactiveCount", 4);
+            SetField(definition, "prefab", prefab);
+            SetField(definition, "destroyedInstancePolicy", policy);
+            SetField(definition, "defaultCapacity", 1);
+            SetField(definition, "maxInactiveCount", 4);
             return definition;
         }
 

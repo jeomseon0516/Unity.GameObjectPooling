@@ -20,9 +20,9 @@ namespace Jeomseon.GameObjectPooling.Editors
             DrawDefaultInspector();
 
             var scope = (GameObjectPoolScope)target;
-            SerializedProperty persistent = serializedObject.FindProperty("_dontDestroyOnLoad");
-            SerializedProperty catalogProperty = serializedObject.FindProperty("_catalog");
-            SerializedProperty definitionProperty = serializedObject.FindProperty("_defaultDefinition");
+            SerializedProperty persistent = serializedObject.FindProperty("dontDestroyOnLoad");
+            SerializedProperty catalogProperty = serializedObject.FindProperty("catalog");
+            SerializedProperty definitionProperty = serializedObject.FindProperty("defaultDefinition");
             string validationMessage = GetValidationMessage(
                 scope,
                 persistent.boolValue,

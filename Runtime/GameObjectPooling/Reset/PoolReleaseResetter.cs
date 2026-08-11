@@ -14,7 +14,7 @@ namespace Jeomseon.GameObjectPooling.Reset
         private const BindingFlags MemberFlags =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-        private static readonly Dictionary<Type, ResetMember[]> Cache = new();
+        private static readonly Dictionary<Type, ResetMember[]> _cache = new();
 
         internal static void Reset(GameObject gameObject)
         {
@@ -29,10 +29,10 @@ namespace Jeomseon.GameObjectPooling.Reset
         private static void Reset(Component component)
         {
             Type type = component.GetType();
-            if (!Cache.TryGetValue(type, out ResetMember[] members))
+            if (!_cache.TryGetValue(type, out ResetMember[] members))
             {
                 members = BuildMembers(type);
-                Cache.Add(type, members);
+                _cache.Add(type, members);
             }
 
             foreach (ResetMember member in members) member.Reset(component);

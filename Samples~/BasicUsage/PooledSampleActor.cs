@@ -1,4 +1,4 @@
-using Jeomseon.GameObjectPooling.Lifecycle;
+using Jeomseon.Unity.GameObjectPooling.Lifecycle;
 using UnityEngine;
 
 namespace Jeomseon.Samples.GameObjectPooling

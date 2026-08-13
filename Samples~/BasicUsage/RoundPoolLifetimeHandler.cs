@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Jeomseon.GameObjectPooling.Configurations;
-using Jeomseon.GameObjectPooling.Handles;
-using Jeomseon.GameObjectPooling.Lifetimes;
+using Jeomseon.Unity.GameObjectPooling.Configurations;
+using Jeomseon.Unity.GameObjectPooling.Handles;
+using Jeomseon.Unity.GameObjectPooling.Lifetimes;
 
 namespace Jeomseon.Samples.GameObjectPooling
 {

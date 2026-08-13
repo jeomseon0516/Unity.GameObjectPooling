@@ -1,6 +1,6 @@
-using Jeomseon.GameObjectPooling.Contracts;
-using Jeomseon.GameObjectPooling.Handles;
-using Jeomseon.GameObjectPooling.Providers;
+using Jeomseon.Unity.GameObjectPooling.Contracts;
+using Jeomseon.Unity.GameObjectPooling.Handles;
+using Jeomseon.Unity.GameObjectPooling.Providers;
 using UnityEngine;
 
 namespace Jeomseon.Samples.GameObjectPooling

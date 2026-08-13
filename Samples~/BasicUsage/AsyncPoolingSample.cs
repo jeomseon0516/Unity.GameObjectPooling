@@ -1,8 +1,8 @@
 using System.Threading;
-using Jeomseon.GameObjectPooling.Definitions;
-using Jeomseon.GameObjectPooling.Handles;
-using Jeomseon.GameObjectPooling.Registrations;
-using Jeomseon.GameObjectPooling.Scopes;
+using Jeomseon.Unity.GameObjectPooling.Definitions;
+using Jeomseon.Unity.GameObjectPooling.Handles;
+using Jeomseon.Unity.GameObjectPooling.Registrations;
+using Jeomseon.Unity.GameObjectPooling.Scopes;
 using UnityEngine;
 using UnityEngine.Serialization;
 

@@ -1,6 +1,6 @@
 using System.Collections;
-using Jeomseon.GameObjectPooling.Handles;
-using Jeomseon.GameObjectPooling.Scopes;
+using Jeomseon.Unity.GameObjectPooling.Handles;
+using Jeomseon.Unity.GameObjectPooling.Scopes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;

@@ -1,6 +1,6 @@
 {
   "name": "Jeomseon.Unity.GameObjectPooling",
-  "rootNamespace": "Jeomseon",
+  "rootNamespace": "Jeomseon.Unity.GameObjectPooling",
   "references": [],
   "includePlatforms": [],
   "excludePlatforms": [],

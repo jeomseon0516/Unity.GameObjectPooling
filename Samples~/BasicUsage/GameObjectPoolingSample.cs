@@ -1,5 +1,5 @@
-using Jeomseon.GameObjectPooling.Contracts;
-using Jeomseon.GameObjectPooling.Scopes;
+using Jeomseon.Unity.GameObjectPooling.Contracts;
+using Jeomseon.Unity.GameObjectPooling.Scopes;
 using UnityEngine;
 using UnityEngine.Serialization;
 

@@ -1,7 +1,7 @@
 using System;
-using Jeomseon.GameObjectPooling.Configurations;
-using Jeomseon.GameObjectPooling.Contracts;
-using Jeomseon.GameObjectPooling.Factories;
+using Jeomseon.Unity.GameObjectPooling.Configurations;
+using Jeomseon.Unity.GameObjectPooling.Contracts;
+using Jeomseon.Unity.GameObjectPooling.Factories;
 using UnityEngine;
 
 namespace Jeomseon.Samples.GameObjectPooling

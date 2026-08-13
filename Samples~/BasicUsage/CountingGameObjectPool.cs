@@ -1,5 +1,5 @@
 using System;
-using Jeomseon.GameObjectPooling.Contracts;
+using Jeomseon.Unity.GameObjectPooling.Contracts;
 using UnityEngine;
 
 namespace Jeomseon.Samples.GameObjectPooling

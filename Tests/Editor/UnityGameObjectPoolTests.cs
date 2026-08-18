@@ -517,21 +517,20 @@ namespace Jeomseon.Tests
         }
 
         [Test]
-        public void Scope_InitializesCatalogAndInvalidatesHandlesOnShutdown()
+        public void Scope_ExplicitInitializeLoadsCatalogAndInvalidatesHandlesOnShutdown()
         {
             GameObject prefab = CreatePrefab();
             UnityGameObjectPoolDefinition definition =
                 CreateDefinition(prefab, prewarmCount: 2);
             GameObjectPoolCatalog catalog = CreateCatalog(definition);
             var scopeObject = new GameObject("Pool scope");
-            scopeObject.SetActive(false);
             GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
 
             var serializedScope = new SerializedObject(scope);
             serializedScope.FindProperty("catalog").objectReferenceValue = catalog;
             serializedScope.FindProperty("defaultDefinition").objectReferenceValue = definition;
             serializedScope.ApplyModifiedPropertiesWithoutUndo();
-            scopeObject.SetActive(true);
+            scope.Initialize();
 
             GameObjectPoolHandle handle = scope.DefaultHandle;
             TestComponent component = handle.Spawn<TestComponent>();

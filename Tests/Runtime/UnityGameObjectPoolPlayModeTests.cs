@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Reflection;
 using System.Threading;
 using Jeomseon.Unity.GameObjectPooling.Configurations;
 using Jeomseon.Unity.GameObjectPooling.Contracts;
@@ -18,6 +17,16 @@ namespace Jeomseon.Tests
 {
     public sealed class UnityGameObjectPoolPlayModeTests
     {
+        private sealed class TestDefinition : GameObjectPoolDefinition
+        {
+            public IGameObjectPoolConfiguration Configuration { get; set; }
+
+            public override IGameObjectPoolConfiguration CreateConfiguration() => Configuration;
+
+            public override IPoolLifetimeConfiguration CreateLifetimeConfiguration() =>
+                PoolLifetimeConfiguration.Scope;
+        }
+
         private sealed class AsyncTrackingFactory : IAsyncGameObjectPoolFactory
         {
             private readonly Jeomseon.Unity.GameObjectPooling.Factories.UnityGameObjectPoolFactory
@@ -57,7 +66,7 @@ namespace Jeomseon.Tests
             var prefab = new GameObject("PlayMode pool prefab");
             prefab.SetActive(false);
             prefab.AddComponent<EnableObserver>();
-            UnityGameObjectPoolDefinition definition = CreateDefinition(prefab);
+            TestDefinition definition = CreateDefinition(prefab);
             using var pool = CreatePool(definition);
             Vector3 position = new(4f, 5f, 6f);
 
@@ -73,11 +82,52 @@ namespace Jeomseon.Tests
         }
 
         [UnityTest]
+        public IEnumerator Scope_InitializeOnAwake_InitializesInPlayMode()
+        {
+            var scopeObject = new GameObject("Awake pool scope");
+            scopeObject.SetActive(false);
+            GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
+
+            Assert.That(scope.IsInitialized, Is.False);
+
+            scopeObject.SetActive(true);
+            yield return null;
+
+            Assert.That(scope.IsInitialized, Is.True);
+
+            Object.Destroy(scopeObject);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator Scope_OnDestroy_InvalidatesOwnedHandles()
+        {
+            var prefab = new GameObject("Destroyed scope prefab");
+            prefab.SetActive(false);
+            var scopeObject = new GameObject("Destroyed pool scope");
+            GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
+            GameObjectPoolHandle handle = scope.Register(
+                new UnityGameObjectPoolConfiguration(prefab),
+                PoolLifetimeConfiguration.Scope);
+
+            Assert.That(handle.IsValid, Is.True);
+
+            Object.Destroy(scopeObject);
+            yield return null;
+
+            Assert.That(handle.IsValid, Is.False);
+            Assert.Throws<System.ObjectDisposedException>(() => handle.Spawn());
+
+            Object.Destroy(prefab);
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator ReplacePolicy_RecoversFromExternallyDestroyedInactiveInstance()
         {
             var prefab = new GameObject("Replace policy prefab");
             prefab.SetActive(false);
-            UnityGameObjectPoolDefinition definition = CreateDefinition(
+            TestDefinition definition = CreateDefinition(
                 prefab,
                 DestroyedInstancePolicy.Replace);
             using var pool = CreatePool(definition);
@@ -108,10 +158,8 @@ namespace Jeomseon.Tests
             var prefab = new GameObject("Scene lifetime prefab");
             prefab.SetActive(false);
             var scopeObject = new GameObject("Persistent pool scope");
-            scopeObject.SetActive(false);
             GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
-            SetField(scope, "dontDestroyOnLoad", true);
-            scopeObject.SetActive(true);
+            Object.DontDestroyOnLoad(scopeObject);
             var poolConfiguration = new UnityGameObjectPoolConfiguration(prefab);
             GameObjectPoolHandle handle = scope.Register(
                 poolConfiguration,
@@ -253,7 +301,7 @@ namespace Jeomseon.Tests
             {
                 var prefab = new GameObject("Async scope prefab");
                 prefab.SetActive(false);
-                UnityGameObjectPoolDefinition definition = CreateDefinition(prefab);
+                TestDefinition definition = CreateDefinition(prefab);
                 var scopeObject = new GameObject("Async pool scope");
                 GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
                 var factory = new AsyncTrackingFactory();
@@ -284,7 +332,7 @@ namespace Jeomseon.Tests
             {
                 var prefab = new GameObject("Callback pool prefab");
                 prefab.SetActive(false);
-                UnityGameObjectPoolDefinition definition = CreateDefinition(prefab);
+                TestDefinition definition = CreateDefinition(prefab);
                 var scopeObject = new GameObject("Callback pool scope");
                 GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
                 PoolRegistrationResult result = default;
@@ -318,31 +366,25 @@ namespace Jeomseon.Tests
             return await scope.RegisterAsync(definition);
         }
 
-        private static UnityGameObjectPoolDefinition CreateDefinition(
+        private static TestDefinition CreateDefinition(
             GameObject prefab,
             DestroyedInstancePolicy policy = DestroyedInstancePolicy.WarnAndReplace)
         {
-            UnityGameObjectPoolDefinition definition =
-                ScriptableObject.CreateInstance<UnityGameObjectPoolDefinition>();
-            SetField(definition, "prefab", prefab);
-            SetField(definition, "destroyedInstancePolicy", policy);
-            SetField(definition, "defaultCapacity", 1);
-            SetField(definition, "maxInactiveCount", 4);
+            TestDefinition definition = ScriptableObject.CreateInstance<TestDefinition>();
+            definition.Configuration = new UnityGameObjectPoolConfiguration(
+                prefab,
+                defaultCapacity: 1,
+                maxInactiveCount: 4,
+                destroyedInstancePolicy: policy);
             return definition;
         }
 
         private static UnityGameObjectPool CreatePool(
-            UnityGameObjectPoolDefinition definition)
+            TestDefinition definition)
         {
             return new UnityGameObjectPool(
                 (UnityGameObjectPoolConfiguration)definition.CreateConfiguration());
         }
 
-        private static void SetField<T>(object target, string name, T value)
-        {
-            target.GetType()
-                .GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)
-                ?.SetValue(target, value);
-        }
     }
 }

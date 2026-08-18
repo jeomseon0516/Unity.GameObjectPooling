@@ -2,6 +2,15 @@
 
 우선순위: `P0` 결함·안전성 → `P1` 핵심 구조 → `P2` API·성능 → `P3` 장기 확장
 
+## 테스트 모드 정리 (2026-08-18, Unity 검증 대기)
+
+- `GameObjectPoolScope`의 `initializeOnAwake` 자동 초기화와 `OnDestroy` 자동 handle 무효화를 실제
+  PlayMode 테스트로 추가했습니다.
+- 기존 Editor 테스트는 Unity 메시지를 암묵적으로 기대하지 않고 명시적 `Initialize()` 계약을
+  검증하도록 이름과 실행 경로를 수정했습니다.
+- Runtime PlayMode 테스트의 private 직렬화 필드 reflection을 제거했습니다. 테스트 전용 Definition은
+  공개 Configuration 계약으로 구성하고, 영속 Scope 조건은 실제 `DontDestroyOnLoad`로 만듭니다.
+
 ## 작업 순서
 
 1. **완료 — P1-01 — ScriptableObject 풀 정의 도입**

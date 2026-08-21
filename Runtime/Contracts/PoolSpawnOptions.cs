@@ -58,8 +58,8 @@ namespace Jeomseon.Unity.GameObjectPooling.Contracts
         /// 월드 공간 Pose와 선택적 부모를 지정하는 옵션을 생성합니다.
         /// </summary>
         public static PoolSpawnOptions At(
-            Vector3 position,
-            Quaternion rotation,
+            in Vector3 position,
+            in Quaternion rotation,
             Transform parent = null)
         {
             return new PoolSpawnOptions(parent, position, rotation, true);

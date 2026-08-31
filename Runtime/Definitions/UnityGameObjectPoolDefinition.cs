@@ -21,6 +21,8 @@ namespace Jeomseon.Unity.GameObjectPooling.Definitions
         [SerializeField, FormerlySerializedAs("_resetAttributedMembers")] private bool resetAttributedMembers = true;
         [SerializeField, FormerlySerializedAs("_destroyedInstancePolicy")] private DestroyedInstancePolicy destroyedInstancePolicy =
             DestroyedInstancePolicy.WarnAndReplace;
+        [SerializeField] private ActiveInstanceShutdownPolicy activeInstanceShutdownPolicy =
+            ActiveInstanceShutdownPolicy.Destroy;
         [SerializeField, FormerlySerializedAs("_lifetime")] private PoolLifetime lifetime = PoolLifetime.Scope;
 
         /// <summary>
@@ -65,6 +67,13 @@ namespace Jeomseon.Unity.GameObjectPooling.Definitions
         /// </summary>
         public DestroyedInstancePolicy DestroyedInstancePolicy => destroyedInstancePolicy;
 
+        /// <summary>
+        /// Gets how active instances are handled when the pool shuts down.
+        /// Pool 종료 시 활성 인스턴스를 처리하는 방식을 가져옵니다.
+        /// </summary>
+        public ActiveInstanceShutdownPolicy ActiveInstanceShutdownPolicy =>
+            activeInstanceShutdownPolicy;
+
         /// <inheritdoc />
         public override IGameObjectPoolConfiguration CreateConfiguration()
         {
@@ -76,7 +85,8 @@ namespace Jeomseon.Unity.GameObjectPooling.Definitions
                 maxInactiveCount,
                 collectionCheck,
                 resetAttributedMembers,
-                destroyedInstancePolicy);
+                destroyedInstancePolicy,
+                activeInstanceShutdownPolicy);
         }
 
         /// <inheritdoc />

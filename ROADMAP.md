@@ -36,3 +36,13 @@
    - 런타임 GameObject 또는 Component를 소유자로 지정하고 실제 파괴 시 풀을 해제합니다.
    - 비활성화와 파괴를 구분하며 소유자 하나로 여러 풀을 관리할 수 있습니다.
    - Scene 객체를 참조하는 Owner Configuration은 ScriptableObject Definition과 분리했습니다.
+8. **완료 — P0-05 — Pool 종료 시 활성 인스턴스 정책** (2026-08-31)
+   - `ActiveInstanceShutdownPolicy.Destroy`를 기본값으로 두어 기존처럼 Pool Scope와 활성
+     인스턴스를 함께 파괴합니다.
+   - `Preserve`는 Pool 종료 시 활성 인스턴스를 남기고 Pool 루트의 자식이면 먼저 분리합니다.
+     이후 Handle은 무효이므로 Pool 반환은 불가능하며, 소유자가 남은 인스턴스를 직접 종료하고
+     파괴해야 합니다.
+   - `UnityGameObjectPoolDefinition` Inspector에서 Preserve 선택 시 위 책임을 한·영 HelpBox 경고로
+     표시합니다. 기본 Destroy와 Preserve Dispose 동작을 Editor 테스트로 추가했습니다.
+   - Unity Object의 파괴된 참조를 NUnit 참조 null로 비교하던 테스트 표현을 Unity의 `== null`
+     규칙에 맞게 수정했고, 사용자가 GameObjectPooling Editor Test Runner 전체 통과를 확인했습니다.

@@ -19,6 +19,39 @@ namespace Jeomseon.Tests
 {
     public sealed class UnityGameObjectPoolTests
     {
+        [Test]
+        public void Dispose_PreservePolicyLeavesActiveInstanceAlive()
+        {
+            GameObject prefab = CreatePrefab();
+            var configuration = new UnityGameObjectPoolConfiguration(
+                prefab,
+                activeInstanceShutdownPolicy: ActiveInstanceShutdownPolicy.Preserve);
+            var pool = new UnityGameObjectPool(configuration);
+            GameObject instance = pool.Get();
+
+            pool.Dispose();
+
+            Assert.That(instance, Is.Not.Null);
+            Assert.That(instance.activeSelf, Is.True);
+
+            Object.DestroyImmediate(instance);
+            Object.DestroyImmediate(prefab);
+        }
+
+        [Test]
+        public void Dispose_DefaultPolicyDestroysActiveInstance()
+        {
+            GameObject prefab = CreatePrefab();
+            var pool = new UnityGameObjectPool(
+                new UnityGameObjectPoolConfiguration(prefab));
+            GameObject instance = pool.Get();
+
+            pool.Dispose();
+
+            Assert.That(instance == null, Is.True);
+            Object.DestroyImmediate(prefab);
+        }
+
         private sealed class TestComponent : MonoBehaviour, IPoolable
         {
             [ResetOnPoolRelease(7)] public int Value;

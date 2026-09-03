@@ -1,5 +1,15 @@
 # 변경 기록
 
+## [Unreleased]
+
+- **(Breaking)** Pool 종료 시 활성 인스턴스를 함께 파괴하는 기본 정책과, 활성 인스턴스를 남기는
+  `Preserve` 정책을 추가했습니다. `UnityGameObjectPoolDefinition`에서 종료 정책을 구성할 수 있습니다.
+- Preserve된 인스턴스는 Pool 부모와 `PooledGameObjectState.Owner`에서 분리해 폐기된 Pool을 계속
+  참조하지 않습니다. Handle 무효화, 비활성 인스턴스 파괴, 외부에서 먼저 파괴된 인스턴스 정리를
+  포함한 회귀 테스트를 추가했습니다.
+- Unity 최소 버전을 `6000.6.0f1`로 올렸습니다. Unity 6000.6 Test Framework에서 EditMode 25/25,
+  PlayMode 11/11을 통과했습니다.
+
 ## [0.3.0] - 2026-08-13
 
 - **(Breaking)** Runtime/Editor 네임스페이스를 패키지 및 경로 규칙에 맞춰

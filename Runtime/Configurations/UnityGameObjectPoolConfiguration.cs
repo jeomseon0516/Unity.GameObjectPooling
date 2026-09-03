@@ -60,6 +60,12 @@ namespace Jeomseon.Unity.GameObjectPooling.Configurations
         public DestroyedInstancePolicy DestroyedInstancePolicy { get; }
 
         /// <summary>
+        /// Gets how active instances are handled when the pool shuts down.
+        /// Pool 종료 시 활성 인스턴스를 처리하는 방식을 가져옵니다.
+        /// </summary>
+        public ActiveInstanceShutdownPolicy ActiveInstanceShutdownPolicy { get; }
+
+        /// <summary>
         /// Creates validated runtime settings for a Unity-backed GameObject pool.
         /// Unity 기반 GameObject 풀을 위한 검증된 런타임 설정을 생성합니다.
         /// </summary>
@@ -72,7 +78,9 @@ namespace Jeomseon.Unity.GameObjectPooling.Configurations
             bool collectionCheck = true,
             bool resetAttributedMembers = true,
             DestroyedInstancePolicy destroyedInstancePolicy =
-                DestroyedInstancePolicy.WarnAndReplace)
+                DestroyedInstancePolicy.WarnAndReplace,
+            ActiveInstanceShutdownPolicy activeInstanceShutdownPolicy =
+                ActiveInstanceShutdownPolicy.Destroy)
         {
             if (prefab == null) throw new ArgumentNullException(nameof(prefab));
             if (defaultCapacity < 1)
@@ -98,6 +106,7 @@ namespace Jeomseon.Unity.GameObjectPooling.Configurations
             CollectionCheck = collectionCheck;
             ResetAttributedMembers = resetAttributedMembers;
             DestroyedInstancePolicy = destroyedInstancePolicy;
+            ActiveInstanceShutdownPolicy = activeInstanceShutdownPolicy;
         }
     }
 }

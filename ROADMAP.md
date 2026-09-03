@@ -2,6 +2,15 @@
 
 우선순위: `P0` 결함·안전성 → `P1` 핵심 구조 → `P2` API·성능 → `P3` 장기 확장
 
+## Unity 6000.6 호환성 점검 (2026-09-02)
+
+- 최소 Unity 버전과 한·영 설치 문서를 `6000.6.0f1`로 상향했습니다.
+- Unity 기본 `ObjectPool<T>`와 비교했을 때 이 패키지는 Definition 기반 구성, Scope 수명,
+  Handle 무효화, 활성 인스턴스 종료 정책과 사용자 수명 처리기를 추가로 제공하므로 공식 API와
+  의미상 중복되는 Wrapper가 아닙니다. 현재 제거 대상은 없습니다.
+- Kilo 후속 보강을 포함한 Runtime·Editor·Sample 컴파일과 관련 EditMode/PlayMode 테스트를
+  Unity 6000.6 Test Framework에서 다시 검증했습니다. EditMode 25/25, PlayMode 11/11이 통과했습니다.
+
 ## 테스트 모드 정리 (2026-08-18, Unity 검증 대기)
 
 - `GameObjectPoolScope`의 `initializeOnAwake` 자동 초기화와 `OnDestroy` 자동 handle 무효화를 실제
@@ -36,3 +45,18 @@
    - 런타임 GameObject 또는 Component를 소유자로 지정하고 실제 파괴 시 풀을 해제합니다.
    - 비활성화와 파괴를 구분하며 소유자 하나로 여러 풀을 관리할 수 있습니다.
    - Scene 객체를 참조하는 Owner Configuration은 ScriptableObject Definition과 분리했습니다.
+8. **완료 — P0-05 — Pool 종료 시 활성 인스턴스 정책** (2026-08-31)
+   - `ActiveInstanceShutdownPolicy.Destroy`를 기본값으로 두어 기존처럼 Pool Scope와 활성
+     인스턴스를 함께 파괴합니다.
+   - `Preserve`는 Pool 종료 시 활성 인스턴스를 남기고 Pool 루트의 자식이면 먼저 분리합니다.
+     이후 Handle은 무효이므로 Pool 반환은 불가능하며, 소유자가 남은 인스턴스를 직접 종료하고
+     파괴해야 합니다.
+   - `UnityGameObjectPoolDefinition` Inspector에서 Preserve 선택 시 위 책임을 한·영 HelpBox 경고로
+     표시합니다. 기본 Destroy와 Preserve Dispose 동작을 Editor 테스트로 추가했습니다.
+   - Unity Object의 파괴된 참조를 NUnit 참조 null로 비교하던 테스트 표현을 Unity의 `== null`
+     규칙에 맞게 수정했고, 사용자가 GameObjectPooling Editor Test Runner 전체 통과를 확인했습니다.
+   - 2026-09-02 Kilo 재검토에서 Preserve 부모 분리·Handle 무효화·비활성 인스턴스 파괴·외부 파괴
+     안전성의 명시적 회귀 검증과 `PooledGameObjectState.Owner` 정리를 요청했습니다. 실제 코드와
+     대조해 모두 타당하다고 판단했고, Preserve 시 State를 Pool에서 분리하며 관련 Editor 테스트를
+     추가했습니다. Unity 6000.6 Test Framework에서 최신 추가 테스트를 포함해 EditMode 25/25,
+     PlayMode 11/11이 통과했습니다.

@@ -277,8 +277,8 @@ namespace Jeomseon.Unity.GameObjectPooling.Pools
         }
 
         /// <summary>
-        /// Destroys active and inactive instances owned by this pool.
-        /// 이 풀이 소유한 활성 및 비활성 인스턴스를 모두 파괴합니다.
+        /// Destroys inactive instances and applies the configured shutdown policy to active ones.
+        /// 비활성 인스턴스를 파괴하고 활성 인스턴스에는 설정된 종료 정책을 적용합니다.
         /// </summary>
         public void Dispose()
         {
@@ -288,10 +288,25 @@ namespace Jeomseon.Unity.GameObjectPooling.Pools
             _storage.Clear();
             foreach (GameObject instance in _activeInstances)
             {
-                DestroyUnityObject(instance);
+                if (!instance) continue;
+                if (_configuration.ActiveInstanceShutdownPolicy ==
+                    ActiveInstanceShutdownPolicy.Destroy)
+                {
+                    DestroyUnityObject(instance);
+                }
+                else
+                {
+                    var state = instance.GetComponent<PooledGameObjectState>();
+                    state?.DetachFromPool();
+                    if (instance.transform.IsChildOf(_root.transform))
+                    {
+                        instance.transform.SetParent(null, true);
+                    }
+                }
             }
 
             _activeInstances.Clear();
+            // Preserve instances must be detached before their owning root is destroyed.
             DestroyUnityObject(_root);
         }
 

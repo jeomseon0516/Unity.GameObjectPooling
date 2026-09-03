@@ -19,5 +19,11 @@ namespace Jeomseon.Unity.GameObjectPooling.Lifecycle
             IsReleased = true;
             hideFlags = HideFlags.HideInInspector;
         }
+
+        internal void DetachFromPool()
+        {
+            Owner = null;
+            IsReleased = false;
+        }
     }
 }

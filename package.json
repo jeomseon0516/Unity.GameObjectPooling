@@ -3,8 +3,8 @@
   "version": "0.3.0",
   "displayName": "Jeomseon Unity GameObject Pooling",
   "description": "Configurable GameObject and Component pooling with replaceable factories, scopes, and lifetime policies.",
-  "unity": "6000.5",
-  "unityRelease": "7f1",
+  "unity": "6000.6",
+  "unityRelease": "0f1",
   "dependencies": {},
   "author": {
     "name": "jeomseon0516",

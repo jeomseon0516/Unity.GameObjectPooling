@@ -21,7 +21,8 @@ namespace Jeomseon.Unity.GameObjectPooling.Definitions
         [SerializeField, FormerlySerializedAs("_resetAttributedMembers")] private bool resetAttributedMembers = true;
         [SerializeField, FormerlySerializedAs("_destroyedInstancePolicy")] private DestroyedInstancePolicy destroyedInstancePolicy =
             DestroyedInstancePolicy.WarnAndReplace;
-        [SerializeField] private ActiveInstanceShutdownPolicy activeInstanceShutdownPolicy =
+        [SerializeField, Tooltip("Controls whether active instances are destroyed or detached when the pool shuts down.")]
+        private ActiveInstanceShutdownPolicy activeInstanceShutdownPolicy =
             ActiveInstanceShutdownPolicy.Destroy;
         [SerializeField, FormerlySerializedAs("_lifetime")] private PoolLifetime lifetime = PoolLifetime.Scope;
 

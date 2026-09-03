@@ -33,13 +33,14 @@ namespace Jeomseon.Tests
 
             Assert.That(instance, Is.Not.Null);
             Assert.That(instance.activeSelf, Is.True);
+            Assert.That(instance.transform.parent, Is.Null);
 
             Object.DestroyImmediate(instance);
             Object.DestroyImmediate(prefab);
         }
 
         [Test]
-        public void Dispose_DefaultPolicyDestroysActiveInstance()
+        public void Dispose_DestroyPolicyDestroysActiveInstance()
         {
             GameObject prefab = CreatePrefab();
             var pool = new UnityGameObjectPool(
@@ -49,6 +50,62 @@ namespace Jeomseon.Tests
             pool.Dispose();
 
             Assert.That(instance == null, Is.True);
+            Object.DestroyImmediate(prefab);
+        }
+
+        [Test]
+        public void Dispose_PreservePolicyDestroysInactiveInstance()
+        {
+            GameObject prefab = CreatePrefab();
+            var configuration = new UnityGameObjectPoolConfiguration(
+                prefab,
+                activeInstanceShutdownPolicy: ActiveInstanceShutdownPolicy.Preserve);
+            var pool = new UnityGameObjectPool(configuration);
+            GameObject instance = pool.Get();
+            pool.Release(instance);
+
+            pool.Dispose();
+
+            Assert.That(instance == null, Is.True);
+            Object.DestroyImmediate(prefab);
+        }
+
+        [Test]
+        public void Dispose_ExternallyDestroyedActiveInstanceDoesNotThrow()
+        {
+            GameObject prefab = CreatePrefab();
+            var configuration = new UnityGameObjectPoolConfiguration(
+                prefab,
+                activeInstanceShutdownPolicy: ActiveInstanceShutdownPolicy.Preserve);
+            var pool = new UnityGameObjectPool(configuration);
+            GameObject instance = pool.Get();
+            Object.DestroyImmediate(instance);
+
+            Assert.DoesNotThrow(pool.Dispose);
+            Object.DestroyImmediate(prefab);
+        }
+
+        [Test]
+        public void ScopeShutdown_PreservePolicyInvalidatesHandleAndDetachesActiveInstance()
+        {
+            GameObject prefab = CreatePrefab();
+            var scopeObject = new GameObject("Pool scope");
+            GameObjectPoolScope scope = scopeObject.AddComponent<GameObjectPoolScope>();
+            GameObjectPoolHandle handle = scope.Register(
+                new UnityGameObjectPoolConfiguration(
+                    prefab,
+                    activeInstanceShutdownPolicy: ActiveInstanceShutdownPolicy.Preserve),
+                PoolLifetimeConfiguration.Scope);
+            GameObject instance = handle.Spawn();
+
+            scope.Shutdown();
+
+            Assert.That(handle.IsValid, Is.False);
+            Assert.That(instance, Is.Not.Null);
+            Assert.That(instance.transform.parent, Is.Null);
+
+            Object.DestroyImmediate(instance);
+            Object.DestroyImmediate(scopeObject);
             Object.DestroyImmediate(prefab);
         }
 

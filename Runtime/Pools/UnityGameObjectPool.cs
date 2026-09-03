@@ -294,13 +294,19 @@ namespace Jeomseon.Unity.GameObjectPooling.Pools
                 {
                     DestroyUnityObject(instance);
                 }
-                else if (instance.transform.IsChildOf(_root.transform))
+                else
                 {
-                    instance.transform.SetParent(null, true);
+                    var state = instance.GetComponent<PooledGameObjectState>();
+                    state?.DetachFromPool();
+                    if (instance.transform.IsChildOf(_root.transform))
+                    {
+                        instance.transform.SetParent(null, true);
+                    }
                 }
             }
 
             _activeInstances.Clear();
+            // Preserve instances must be detached before their owning root is destroyed.
             DestroyUnityObject(_root);
         }
 

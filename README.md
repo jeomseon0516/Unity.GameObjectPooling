@@ -17,22 +17,22 @@ Unity GameObject와 Component를 위한 설정 가능하고 교체 가능한 풀
       "name": "OpenUPM",
       "url": "https://package.openupm.com",
       "scopes": [
-        "com.jeomseon.unity"
+        "com.jeomseon"
       ]
     }
   ],
   "dependencies": {
-    "com.jeomseon.unity.game-object-pooling": "0.2.0"
+    "com.jeomseon.unity.game-object-pooling": "0.4.0"
   }
 }
 ```
 
 ## Git URL로 설치
 
-Unity Package Manager의 `Install package from git URL`에 다음 URL을 입력합니다.
+Unity Package Manager의 `Install package from git URL`에 다음 주소를 사용합니다.
 
 ```text
-https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.2.0
+https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.4.0
 ```
 
 ## 로컬 개발

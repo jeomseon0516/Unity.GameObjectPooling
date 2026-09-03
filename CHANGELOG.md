@@ -1,6 +1,6 @@
 # 변경 기록
 
-## [Unreleased]
+## [0.4.0] - 2026-09-03
 
 - **(Breaking)** Pool 종료 시 활성 인스턴스를 함께 파괴하는 기본 정책과, 활성 인스턴스를 남기는
   `Preserve` 정책을 추가했습니다. `UnityGameObjectPoolDefinition`에서 종료 정책을 구성할 수 있습니다.

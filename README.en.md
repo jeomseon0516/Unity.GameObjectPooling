@@ -6,7 +6,7 @@ Provides configurable and replaceable pooling for Unity GameObjects and Componen
 
 - Unity 6000.6.0f1 or newer
 
-## Installation with OpenUPM
+## Install via OpenUPM
 
 Register the OpenUPM scoped registry once in your project's `Packages/manifest.json`.
 
@@ -17,22 +17,22 @@ Register the OpenUPM scoped registry once in your project's `Packages/manifest.j
       "name": "OpenUPM",
       "url": "https://package.openupm.com",
       "scopes": [
-        "com.jeomseon.unity"
+        "com.jeomseon"
       ]
     }
   ],
   "dependencies": {
-    "com.jeomseon.unity.game-object-pooling": "0.2.0"
+    "com.jeomseon.unity.game-object-pooling": "0.4.0"
   }
 }
 ```
 
-## Git URL
+## Install via Git URL
 
-Use the following URL with Unity Package Manager's `Install package from git URL` option:
+Enter the following URL in Unity Package Manager's `Install package from git URL`.
 
 ```text
-https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.2.0
+https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.4.0
 ```
 
 ## Features

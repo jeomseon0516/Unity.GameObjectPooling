@@ -1,14 +1,67 @@
 # Jeomseon Unity GameObject Pooling
 
-Unity GameObject와 Component를 위한 설정 가능하고 교체 가능한 풀링 기능을 제공합니다.
+한국어 | [English](README.en.md)
+
+Prefab 재사용의 설정·접근·반환·풀 종료를 분리합니다. Unity ObjectPool을 저장소로 사용하고 게임 객체 수명 정책을 추가합니다.
+
+## 빠르게 시작하기
+
+Definition 또는 runtime Configuration을 Scope에 등록 → Handle로 Spawn → 같은 Handle에 Despawn → Scope/정책 종료로 풀 정리. 도메인 Provider는 선택 사항입니다.
+
+전체 샘플 코드: [GameObjectPoolingSample.cs](Samples~/BasicUsage/GameObjectPoolingSample.cs).
+
+```csharp
+using Jeomseon.Unity.GameObjectPooling.Contracts;
+using Jeomseon.Unity.GameObjectPooling.Scopes;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+namespace Jeomseon.Samples.GameObjectPooling
+{
+    /// <summary>
+    /// Demonstrates concise Definition-based access through a scene scope's default handle.
+    /// 씬 Scope의 기본 Handle을 통한 간결한 Definition 기반 접근을 보여줍니다.
+    /// </summary>
+    public sealed class GameObjectPoolingSample : MonoBehaviour
+    {
+        [SerializeField, FormerlySerializedAs("_scope")] private GameObjectPoolScope scope;
+        private GameObject _instance;
+
+        [ContextMenu("Get Pooled Object / 풀 객체 가져오기")]
+        private void GetPooledObject()
+        {
+            if (_instance != null || scope == null) return;
+
+            _instance = scope.Spawn(PoolSpawnOptions.At(
+                transform.position,
+                transform.rotation,
+                transform));
+        }
+
+        [ContextMenu("Release Pooled Object / 풀 객체 반환하기")]
+        private void ReleasePooledObject()
+        {
+            if (_instance == null || scope == null) return;
+
+            scope.Despawn(_instance);
+            _instance = null;
+        }
+    }
+}
+```
+
+## 계약과 주의사항
+
+최대 비활성 수는 전체 생성 수 제한이 아닙니다. Preserve로 분리한 객체는 직접 파괴해야 합니다. 사용자 수명 훅은 루트 컴포넌트에 둡니다.
 
 ## 요구 사항
 
-- Unity 6000.6.0f1 이상
+- Unity `6000.6.0f1`
+- 패키지: `com.jeomseon.unity.game-object-pooling` `0.4.0`
 
-## OpenUPM으로 설치
+## 설치
 
-프로젝트의 `Packages/manifest.json`에 OpenUPM scoped registry를 한 번 등록합니다.
+프로젝트 `Packages/manifest.json`의 기존 dependencies와 registry를 유지하면서 다음 항목을 병합합니다.
 
 ```json
 {
@@ -27,30 +80,94 @@ Unity GameObject와 Component를 위한 설정 가능하고 교체 가능한 풀
 }
 ```
 
-## Git URL로 설치
-
-Unity Package Manager의 `Install package from git URL`에 다음 주소를 사용합니다.
+또는 Package Manager의 **Install package from git URL**을 사용합니다:
 
 ```text
 https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.4.0
 ```
 
-## 로컬 개발
+## 설계와 동작
 
-개발용 Unity 프로젝트의 `Packages/manifest.json`에 로컬 저장소를 연결합니다.
+### 해결하는 문제
 
-```json
-{
-  "dependencies": {
-    "com.jeomseon.unity.game-object-pooling": "file:../../Jeomseon.Unity.GameObjectPooling"
-  },
-  "testables": [
-    "com.jeomseon.unity.game-object-pooling"
-  ]
-}
+Unity의 `ObjectPool<T>`는 재사용 저장소를 제공합니다. 게임에서 추가로 필요한 것은 Prefab 구성,
+Component 접근, 외부 파괴 감지, 반환 시 상태 복원, 그리고 Scene·Application·owner에 따른 풀 종료입니다.
+이 패키지는 저장소는 Unity API에 맡기고 이 수명·구성 계약을 추가합니다.
+
+### 책임과 호출 흐름
+
+```mermaid
+flowchart LR
+    Definition[Definition 또는 runtime Configuration] --> Scope[GameObjectPoolScope]
+    Scope --> Registration[Registration]
+    Registration --> Factory[Factory]
+    Factory --> Pool[IGameObjectPool]
+    Scope --> Handle[GameObjectPoolHandle]
+    Caller[호출부 또는 Provider] --> Handle
+    Handle --> Pool
 ```
 
-## 포함 기능
+| 타입 | 책임 | 호출부가 알아야 할 것 |
+| --- | --- | --- |
+| `UnityGameObjectPoolDefinition` | Inspector에서 공유하는 Prefab·풀·수명 설정 | 런타임 상태를 에셋에 저장하지 않음 |
+| `GameObjectPoolScope` | 등록과 수명 관리의 진입점 | 기본 풀 또는 등록한 Handle을 사용 |
+| `GameObjectPoolHandle` | 특정 풀의 Spawn/Despawn | 종료 뒤 `IsValid == false` |
+| `ComponentPoolProvider<T>` | 프로젝트의 도메인 API로 접근 제한 | 풀을 별도로 소유하지 않음 |
+| `IGameObjectPoolFactory` | 설정에 맞는 풀 생성 | 사용자 풀 구현의 확장 지점 |
+| `IPoolLifetimeHandler` | 수명 정책 실행 | Scope에 등록하면 Scope가 Dispose 책임을 가짐 |
+
+Definition 기반 등록은 같은 Scope에서 공유 Handle을 사용하고, runtime Configuration 등록은
+독립 Handle을 만듭니다. Catalog는 여러 Definition의 등록·preload를 묶는 선택 사항입니다.
+Catalog를 게임 로직의 전역 검색 키로 사용하지 않습니다.
+
+### 한 번의 재사용 주기
+
+1. `Spawn`이 비활성 저장소에서 객체를 얻고 위치·회전·부모를 적용합니다.
+2. 활성 목록에 등록하고 `SetActive(true)` 후 `IPoolGetHandler`를 호출합니다.
+3. 사용을 마치면 같은 Handle의 `Despawn`에 반환합니다.
+4. `IPoolReleaseHandler` 호출 후 설정에 따라 `[ResetOnPoolRelease]` 멤버를 복원합니다.
+5. 객체를 비활성화하고 풀 루트로 옮긴 뒤 저장소에 반환합니다.
+
+수명 훅 검색은 생성 시 루트 GameObject의 컴포넌트를 대상으로 합니다. 자식의 훅을 자동 호출한다고
+가정하지 마세요. `Spawn<T>`는 Prefab 루트에 T가 없으면 예외를 던집니다.
+
+### 기본값과 종료 정책
+
+runtime `UnityGameObjectPoolConfiguration`의 기본값은 prewarm 0, capacity 10, 최대 비활성 100,
+collection check 켬, Attribute 상태 복원 켬, 외부 파괴 `WarnAndReplace`, 활성 객체 종료 `Destroy`입니다.
+최대 비활성 수는 전체 Spawn 수 제한이 아닙니다. 반환 시 저장 용량을 넘는 객체는 파괴됩니다.
+
+Scope·Scene·Application 수명을 구분합니다. Application 수명에는 루트의 지속 Scope가 필요합니다.
+`OwnerPoolLifetimeConfiguration`은 owner의 비활성화가 아닌 실제 파괴를 감지합니다.
+종료 시 비활성 객체는 파괴됩니다. `Preserve` 정책은 활성 객체를 풀에서 분리하므로, 이후에는
+호출부가 그 객체의 파괴를 책임져야 하며 종료된 Handle에 반환할 수 없습니다.
+
+### 실패·비동기 계약
+
+- 다른 풀의 객체, 이중 반환, null 반환은 정상 사용 경로가 아닙니다. 기본 구현은 예외로 알립니다.
+- 종료된 Handle의 Spawn/Despawn은 `ObjectDisposedException`을 던집니다.
+- 외부 `Destroy` 뒤의 처리 방식은 `DestroyedInstancePolicy`로 선택합니다. 정상 회수는 Despawn입니다.
+- 비동기는 풀 등록·생성 단계에만 필요합니다. 등록 뒤 Spawn/Despawn은 동기 호출입니다.
+- `RegisterAsync`는 비동기 Factory를 우선 사용하고 없으면 동기 Factory로 처리합니다.
+  동기 `Register`는 비동기 결과를 블로킹해서 기다리지 않습니다.
+- 사용자 Factory가 외부 로드 리소스를 획득했다면 반환한 풀의 Dispose에서 해제해야 합니다.
+
+### 실행과 코드 읽기
+
+Package Manager에서 Basic Usage를 Import하고 [샘플 안내](Samples~/BasicUsage/README.md)를
+따라 Scene의 Definition·runtime Configuration·Provider 예제를 비교하세요.
+최소 호출은 [GameObjectPoolingSample](Samples~/BasicUsage/GameObjectPoolingSample.cs),
+도메인 경계는 [ProviderPoolingSample](Samples~/BasicUsage/ProviderPoolingSample.cs)을 참고합니다.
+
+코드는 [Scope](Runtime/Scopes/GameObjectPoolScope.cs) →
+[Handle](Runtime/Handles/GameObjectPoolHandle.cs) →
+[기본 Pool](Runtime/Pools/UnityGameObjectPool.cs) 순서로 읽으면 됩니다.
+[테스트](Tests)는 종료·반환·외부 파괴 등의 회귀 사례를 제공합니다.
+소비 프로젝트 manifest의 `testables`에 패키지 ID를 추가해 Unity Test Runner로 실행합니다.
+
+## API 사용과 상세 설명
+
+### 포함 기능
 
 - 사용자 구현으로 교체 가능한 `IGameObjectPool`, `IGameObjectPoolFactory` 및 런타임 Configuration 계약
 - Unity `ObjectPool<GameObject>` 기반 기본 구현과 ScriptableObject 풀 정의
@@ -60,7 +177,7 @@ https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.4.0
 
 일반 호출부는 `GameObjectPoolScope`가 반환한 `GameObjectPoolHandle` 또는 프로젝트 Provider에 의존합니다. Definition과 런타임 Configuration은 모두 Registration으로 변환되므로 생성 방식과 런타임 식별이 분리됩니다.
 
-## GameObject 풀 설정
+### GameObject 풀 설정
 
 1. `Tool/GameObject Pooling/Unity GameObject Pool`에서 Definition을 만들고 Prefab과 정책을 설정합니다.
 2. 씬의 GameObject에 `GameObjectPoolScope`를 추가하고 기본 Definition을 연결합니다.
@@ -104,7 +221,7 @@ Definition 및 런타임 Configuration으로 등록된 모든 Handle의 통계�
 소유하지 않습니다. `GameObjectPoolService`, Factory 및 `IGameObjectPool`은 사용자 저장소나
 Composition Root를 구현하는 저수준 확장 API입니다.
 
-### 동기 및 비동기 생성
+#### 동기 및 비동기 생성
 
 호출부는 리소스 공급 방식에 따라 동기 또는 `Awaitable` 기반 API를 선택합니다. 등록이
 완료된 뒤의 `Spawn`과 `Despawn`은 두 경로 모두 동일한 동기 API를 사용합니다.
@@ -170,10 +287,24 @@ GameObjectPoolHandle handle = scope.Register(
 
 `Basic Usage` 샘플에는 Definition 접근, 런타임 Configuration 접근, 프로젝트 Provider를 통한 간접 접근, Application 수명 수동 검증 환경이 포함됩니다.
 
+## 샘플 실행
+
+**Package Manager > Samples**에서 예제를 Import합니다. 포함된 Scene 또는 Editor 도구를 열고 필요한 Setup 메뉴를 먼저 실행합니다.
+
+- [Basic Usage](Samples~/BasicUsage/README.md)
+  - [GameObjectPoolingSample](Samples~/BasicUsage/GameObjectPooling/GameObjectPoolingSample.unity)
+
 ## 테스트
 
-패키지를 `testables`에 등록한 후 Unity Test Runner의 EditMode에서 실행합니다.
+[테스트 코드](Tests)
+
+manifest의 `testables`에 패키지 ID를 추가하고 Unity Test Runner의 관련 EditMode/PlayMode 어셈블리를 실행합니다.
+
+## 추가 문서
+
+[전체 코드 지도와 패키지 구성](Documentation~/Overview.md)
+- [Changelog](CHANGELOG.md)
 
 ## 라이선스
 
-[MIT License](./LICENSE.md)
+[License](LICENSE.md)

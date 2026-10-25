@@ -4,6 +4,10 @@
 
 Prefab 재사용의 설정·접근·반환·풀 종료를 분리합니다. Unity ObjectPool을 저장소로 사용하고 게임 객체 수명 정책을 추가합니다.
 
+![Configuration, reuse, and shutdown](Documentation~/Images/usage-flow.svg)
+
+설정은 Definition/Configuration에, 등록과 종료는 Scope에, 반복 사용은 Handle에 둡니다. 반환한 객체의 참조를 계속 사용하지 않습니다.
+
 ## 빠르게 시작하기
 
 Definition 또는 runtime Configuration을 Scope에 등록 → Handle로 Spawn → 같은 Handle에 Despawn → Scope/정책 종료로 풀 정리. 도메인 Provider는 선택 사항입니다.
@@ -286,6 +290,13 @@ GameObjectPoolHandle handle = scope.Register(
 | 저수준 | Service, Factory, `IGameObjectPool` | 사용자 저장소와 Composition Root |
 
 `Basic Usage` 샘플에는 Definition 접근, 런타임 Configuration 접근, 프로젝트 Provider를 통한 간접 접근, Application 수명 수동 검증 환경이 포함됩니다.
+
+## 동작 확인
+
+1. Basic Usage를 Import하고 `GameObjectPooling/GameObjectPoolingSample.unity`를 엽니다.
+2. Play에서 01 Definition Access의 Get/Release Context Menu를 순서대로 실행합니다. 반환 후 객체가 비활성화되고 풀 루트로 이동하는지 확인합니다.
+3. 다시 Get해 재사용을 확인하고 02 Runtime Configuration과 동일한 호출 흐름을 비교합니다.
+4. 종료 정책별 활성 객체의 Destroy/Preserve 결과를 비교합니다. Preserve로 분리한 객체는 직접 파괴합니다.
 
 ## 샘플 실행
 

@@ -4,6 +4,10 @@
 
 Separates Prefab reuse configuration, access, return, and shutdown. Unity ObjectPool supplies storage; the package adds GameObject lifetime policies.
 
+![Configuration, reuse, and shutdown](Documentation~/Images/usage-flow.svg)
+
+Keep configuration in the Definition/Configuration, registration and shutdown in the Scope, and reuse calls on the Handle. Stop using an instance after returning it.
+
 ## Quick start
 
 Register a Definition or runtime Configuration in a Scope, Spawn through its Handle, Despawn through the same Handle, then let the Scope/policy shut down the pool. Domain Providers are optional.
@@ -270,6 +274,13 @@ GameObjectPoolHandle handle = scope.Register(
 | Low-level | Service, Factory, `IGameObjectPool` | Custom storage and composition roots |
 
 The `Basic Usage` sample includes Definition-based access, runtime-configuration access, project-facing Provider access, and a manual Application-lifetime verification environment.
+
+## Verify the behavior
+
+1. Import Basic Usage and open `GameObjectPooling/GameObjectPoolingSample.unity`.
+2. In Play Mode, invoke the Get/Release context menus on 01 Definition Access. After return, check that the instance becomes inactive and moves under the pool root.
+3. Get again to observe reuse, then compare the same calling flow with 02 Runtime Configuration.
+4. Compare active-instance Destroy/Preserve shutdown policies. Explicitly destroy instances detached by Preserve.
 
 ## Samples
 

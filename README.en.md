@@ -22,7 +22,7 @@ Register the OpenUPM scoped registry once in your project's `Packages/manifest.j
     }
   ],
   "dependencies": {
-    "com.jeomseon.unity.game-object-pooling": "0.4.0"
+    "com.jeomseon.unity.game-object-pooling": "0.4.1"
   }
 }
 ```
@@ -32,7 +32,7 @@ Register the OpenUPM scoped registry once in your project's `Packages/manifest.j
 Enter the following URL in Unity Package Manager's `Install package from git URL`.
 
 ```text
-https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.4.0
+https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.4.1
 ```
 
 ## Features

@@ -18,6 +18,7 @@ namespace Jeomseon.Unity.GameObjectPooling.Editor.Editors
         // .. 경로는 같은 연속 갱신을 Inspector가 표시되는 동안 짧은 주기의 scheduler로 대신합니다.
         private const long RefreshIntervalMs = 100;
 
+        private readonly List<GameObjectPoolHandle> _sortedHandles = new();
         private string _lastLoggedValidationMessage;
 
         public override VisualElement CreateInspectorGUI()
@@ -89,10 +90,11 @@ namespace Jeomseon.Unity.GameObjectPooling.Editor.Editors
             statisticsRoot.style.display = DisplayStyle.Flex;
             statisticsRoot.Add(new VisualElement { style = { height = 6f } });
             statisticsRoot.Add(CreateBoldLabel("Runtime Statistics / 런타임 통계"));
-            var handles = new List<GameObjectPoolHandle>(scope.Handles);
-            handles.Sort((left, right) => string.CompareOrdinal(left.Name, right.Name));
+            _sortedHandles.Clear();
+            _sortedHandles.AddRange(scope.Handles);
+            _sortedHandles.Sort((left, right) => string.CompareOrdinal(left.Name, right.Name));
             scope.TryGetDefault(out GameObjectPoolHandle defaultHandle);
-            foreach (GameObjectPoolHandle handle in handles)
+            foreach (GameObjectPoolHandle handle in _sortedHandles)
             {
                 string defaultSuffix = ReferenceEquals(handle, defaultHandle)
                     ? " (Default / 기본)"

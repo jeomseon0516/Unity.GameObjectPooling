@@ -79,7 +79,7 @@ namespace Jeomseon.Samples.GameObjectPooling
     }
   ],
   "dependencies": {
-    "com.jeomseon.unity.game-object-pooling": "0.4.0"
+    "com.jeomseon.unity.game-object-pooling": "0.4.1"
   }
 }
 ```
@@ -87,7 +87,7 @@ namespace Jeomseon.Samples.GameObjectPooling
 또는 Package Manager의 **Install package from git URL**을 사용합니다:
 
 ```text
-https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.4.0
+https://github.com/jeomseon0516/Unity.GameObjectPooling.git#v0.4.1
 ```
 
 ## 설계와 동작
